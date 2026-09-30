@@ -1,0 +1,418 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Reason X - Email Verification</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              DEFAULT: '#5243FA',
+              hover: '#4334eb',
+              light: '#ECEBFF',
+            },
+            neutral: {
+              dark: '#111827',
+              muted: '#6B7280',
+              border: '#E5E7EB',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          boxShadow: {
+            'card': '0 20px 40px -15px rgba(82, 67, 250, 0.08), 0 0 1px 1px rgba(0, 0, 0, 0.02)',
+            'btn-glow': '0 10px 20px -5px rgba(82, 67, 250, 0.35)',
+            'float-glow': '0 14px 30px -8px rgba(82, 67, 250, 0.28), 0 4px 12px rgba(0, 0, 0, 0.04)',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Typography and Custom Styles -->
+<style data-purpose="typography">
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+  </style>
+<!-- Background Decorative & Animation Styles -->
+<style data-purpose="background-decorations">
+    .bg-gradient-soft {
+      background: radial-gradient(circle at 10% 20%, rgba(235, 237, 255, 0.8) 0%, rgba(248, 249, 255, 1) 60%, rgba(240, 242, 255, 0.7) 100%);
+    }
+    .floating-shape-1 {
+      position: absolute;
+      top: 15%;
+      left: -5%;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(220, 215, 255, 0.4) 0%, rgba(245, 245, 255, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .floating-shape-2 {
+      position: absolute;
+      bottom: -10%;
+      right: -5%;
+      width: 450px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(200, 210, 255, 0.5) 0%, rgba(240, 240, 255, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Dashed flight trajectory animation */
+    @keyframes marchDashes {
+      0% {
+        stroke-dashoffset: 48;
+      }
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+    .animate-flight-path {
+      stroke-dasharray: 6 7;
+      animation: marchDashes 2.4s linear infinite;
+    }
+
+    /* Smooth swooping & tilting paper airplane flight */
+    @keyframes paperPlaneFlight {
+      0% {
+        transform: translate(0px, 0px) rotate(8deg) scale(1);
+      }
+      25% {
+        transform: translate(14px, -18px) rotate(16deg) scale(1.04);
+      }
+      50% {
+        transform: translate(26px, -8px) rotate(5deg) scale(1.02);
+      }
+      75% {
+        transform: translate(12px, 8px) rotate(-3deg) scale(0.98);
+      }
+      100% {
+        transform: translate(0px, 0px) rotate(8deg) scale(1);
+      }
+    }
+    .animate-plane {
+      animation: paperPlaneFlight 4.8s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    /* Gentle floating & bobbing envelope badge */
+    @keyframes envelopeFloat {
+      0%, 100% {
+        transform: translateY(0px) rotate(-1deg);
+        box-shadow: 0 14px 28px -8px rgba(82, 67, 250, 0.22), 0 4px 10px rgba(0, 0, 0, 0.04);
+      }
+      50% {
+        transform: translateY(-12px) rotate(2deg);
+        box-shadow: 0 22px 34px -8px rgba(82, 67, 250, 0.32), 0 8px 16px rgba(0, 0, 0, 0.06);
+      }
+    }
+    .animate-envelope-card {
+      animation: envelopeFloat 3.8s ease-in-out infinite;
+      will-change: transform, box-shadow;
+    }
+
+    /* Subtle breathing & floating idle for mascot */
+    @keyframes mascotIdle {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-6px);
+      }
+    }
+    .animate-mascot {
+      animation: mascotIdle 5s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    /* Subtle pulse on trajectory beacon points */
+    @keyframes beaconPulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.85;
+      }
+      50% {
+        transform: scale(1.35);
+        opacity: 0.35;
+      }
+    }
+    .animate-beacon {
+      animation: beaconPulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-soft text-slate-800 flex flex-col justify-between relative overflow-x-hidden">
+<!-- Soft Ambient Glow Shapes -->
+<div class="floating-shape-1"></div>
+<div class="floating-shape-2"></div>
+<!-- BEGIN: MainHeader -->
+<header class="w-full max-w-7xl mx-auto px-6 py-5 flex items-center justify-between relative z-10" data-purpose="navbar">
+<!-- Brand Logo -->
+<a class="flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-primary rounded-lg px-1" href="#">
+<span class="text-2xl font-black tracking-tight text-neutral-dark">Reason</span>
+<span class="text-2xl font-black text-primary">X</span>
+</a>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-10 text-sm font-medium text-slate-600">
+<a class="hover:text-primary transition-colors" href="#features">Features</a>
+<a class="hover:text-primary transition-colors" href="#how-it-works">How It Works</a>
+<a class="hover:text-primary transition-colors" href="#about">About</a>
+<a class="hover:text-primary transition-colors" href="#contact">Contact</a>
+</nav>
+<!-- Sign In CTA Button -->
+<div class="flex items-center">
+<a class="inline-flex items-center justify-center px-6 py-2.5 bg-primary text-white text-sm font-semibold rounded-full hover:bg-primary-hover transition-all duration-200 shadow-sm shadow-primary/20" href="login.html">
+        Sign In
+      </a>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="w-full max-w-6xl mx-auto px-6 py-6 lg:py-8 flex-1 flex items-center relative z-10">
+<div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative">
+<!-- BEGIN: LeftColumn (Hero / 3D Assistant Illustration) -->
+<section class="lg:col-span-6 flex flex-col items-start relative" data-purpose="illustration-section">
+<!-- Verification Stage Pill Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#ECE9FE] text-[#5243FA] text-xs font-semibold tracking-wide uppercase mb-4">
+<svg aria-hidden="true" class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+<path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path>
+</svg>
+<span class="">Verify Your Email</span>
+</div>
+<!-- Main Title -->
+<h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-neutral-dark mb-4 leading-tight">
+          Check Your<br>
+<span class="text-primary">Email</span>
+</h1>
+<!-- Explanatory Subtitle -->
+<p class="text-slate-500 text-sm md:text-base max-w-md leading-relaxed mb-6 font-normal">
+          We've sent a verification code to your email address. Please enter the code below to continue.
+        </p>
+<!-- 3D Mascot Image with subtle breathing float animation -->
+
+</section>
+<!-- END: LeftColumn -->
+<!-- BEGIN: Flight Path & Floating Trajectory Elements (connecting robot to card) -->
+<div aria-hidden="true" class="hidden lg:block absolute inset-0 pointer-events-none z-20 overflow-visible">
+<!-- Curved animated dashed flight path -->
+<svg class="w-full h-full" fill="none" preserveAspectRatio="none" viewBox="0 0 1152 640">
+<defs>
+<linearGradient id="flightGradient" x1="0%" x2="100%" y1="100%" y2="0%">
+<stop offset="0%" stop-color="#5243FA" stop-opacity="0.15"></stop>
+<stop offset="45%" stop-color="#5243FA" stop-opacity="0.75"></stop>
+<stop offset="100%" stop-color="#7B61FF" stop-opacity="0.9"></stop>
+</linearGradient>
+<linearGradient id="planeGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#6E56FF"></stop>
+<stop offset="100%" stop-color="#4F36E8"></stop>
+</linearGradient>
+<linearGradient id="planeFold" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#8E78FF"></stop>
+<stop offset="100%" stop-color="#5E43F8"></stop>
+</linearGradient>
+<filter height="180%" id="planeGlow" width="180%" x="-40%" y="-40%">
+<feDropShadow dx="0" dy="8" flood-color="#5243FA" flood-opacity="0.32" stdDeviation="8"></feDropShadow>
+</filter>
+</defs>
+<!-- Flowing Dashed Flight Path from mascot envelope towards card -->
+<path class="animate-flight-path" d="M 330 430 C 420 370, 470 230, 595 195 C 640 183, 675 188, 715 205" stroke="url(#flightGradient)" stroke-linecap="round" stroke-width="2.5"></path>
+<!-- Pulsing departure beacon point -->
+<circle class="animate-beacon" cx="330" cy="430" fill="#5243FA" r="4.5"></circle>
+<circle cx="330" cy="430" fill="#ECEBFF" r="2"></circle>
+<!-- Waypoint spark particle -->
+<circle cx="495" cy="275" fill="#7B61FF" fill-opacity="0.7" r="2.5"></circle>
+<circle cx="560" cy="215" fill="#5243FA" fill-opacity="0.6" r="2"></circle>
+</svg>
+<!-- Animated Floating Paper Airplane -->
+<div class="absolute left-[45%] top-[24%] -translate-x-1/2 -translate-y-1/2 animate-plane" style="transform-origin: center center;">
+<div class="relative group cursor-pointer pointer-events-auto">
+<!-- Glow ambient pulse -->
+<div class="absolute inset-0 bg-primary/25 blur-lg rounded-full transform scale-125"></div>
+<svg class="w-14 h-14 relative drop-shadow-[0_12px_20px_rgba(82,67,250,0.38)]" viewBox="0 0 72 72">
+<!-- Main body wing left -->
+<polygon fill="url(#planeGrad)" points="64,8 6,36 34,44"></polygon>
+<!-- Wing top fold -->
+<polygon fill="url(#planeFold)" points="64,8 34,44 44,64"></polygon>
+<!-- Under fold shadow -->
+<polygon fill="#3B26C9" points="34,44 44,64 39,47"></polygon>
+<!-- Inner fuselage fold highlight -->
+<polygon fill="#A897FF" opacity="0.6" points="64,8 24,38 34,44"></polygon>
+</svg>
+<!-- Tiny vapor sparkles trailing -->
+<span class="absolute -bottom-1 -left-2 w-1.5 h-1.5 bg-primary/60 rounded-full animate-ping"></span>
+</div>
+</div>
+<!-- Flying Envelope Notification Card / Badge -->
+<div class="absolute left-[54%] top-[14%] -translate-x-1/2 animate-envelope-card pointer-events-auto">
+<div class="flex items-center gap-2.5 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-primary/20 shadow-float-glow transition-all hover:scale-105">
+<!-- Mini mail icon badge -->
+<div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center text-primary flex-shrink-0">
+<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+<path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path>
+</svg>
+</div>
+<!-- Badge microcopy -->
+<div class="pr-1 text-left">
+<div class="text-[11px] font-bold text-neutral-dark tracking-tight leading-tight flex items-center gap-1.5">
+<span class="">OTP En Route</span>
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+</div>
+<div class="text-[9.5px] font-medium text-slate-400 leading-tight">6-digit code</div>
+</div>
+</div>
+</div>
+</div>
+<!-- END: Flight Path & Floating Trajectory Elements -->
+<!-- BEGIN: RightColumn (Verification Form Card) -->
+<section class="lg:col-span-6 w-full max-w-lg mx-auto relative z-10" data-purpose="verification-form-container">
+<div class="bg-white/95 backdrop-blur-sm rounded-3xl p-8 sm:p-10 shadow-card border border-white">
+<!-- Card Header / Icon Badge -->
+<div class="flex flex-col items-center text-center">
+<div class="w-16 h-16 rounded-full bg-[#EAE8FE] flex items-center justify-center mb-5 text-primary shadow-inner">
+<svg aria-hidden="true" class="w-8 h-8 fill-current" viewBox="0 0 24 24">
+<path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"></path>
+</svg>
+</div>
+<!-- Card Headline -->
+<h2 class="text-2xl font-bold text-neutral-dark tracking-tight mb-2">
+              Verify Your Email
+            </h2>
+<!-- Card Description & Dynamic Recipient -->
+<p class="text-xs sm:text-sm text-slate-500 max-w-xs mb-8">
+              Enter the 6-digit code sent to<br>
+<span class="font-medium text-primary">sakthi2006@gmail.com</span>
+</p>
+</div>
+<!-- OTP Form Elements -->
+<form class="space-y-6" id="otp-form" onsubmit="event.preventDefault();">
+<!-- 6-digit Input Row -->
+<div class="flex justify-between items-center gap-2 sm:gap-3" data-purpose="otp-digit-inputs">
+<input aria-label="Digit 1" class="w-11 sm:w-13 h-13 sm:h-14 aspect-square text-center font-bold text-lg sm:text-xl text-neutral-dark bg-white border-2 border-primary rounded-xl focus:ring-2 focus:ring-primary focus:border-primary focus:outline-none transition-all" maxlength="1" type="text" value="1">
+<input aria-label="Digit 2" class="w-11 sm:w-13 h-13 sm:h-14 aspect-square text-center font-bold text-lg sm:text-xl text-neutral-dark bg-slate-50/70 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none transition-all" maxlength="1" type="text" value="2">
+<input aria-label="Digit 3" class="w-11 sm:w-13 h-13 sm:h-14 aspect-square text-center font-bold text-lg sm:text-xl text-neutral-dark bg-slate-50/70 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none transition-all" maxlength="1" type="text" value="3">
+<input aria-label="Digit 4" class="w-11 sm:w-13 h-13 sm:h-14 aspect-square text-center font-bold text-lg sm:text-xl text-neutral-dark bg-slate-50/70 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none transition-all" maxlength="1" type="text" value="4">
+<input aria-label="Digit 5" class="w-11 sm:w-13 h-13 sm:h-14 aspect-square text-center font-bold text-lg sm:text-xl text-neutral-dark bg-slate-50/70 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none transition-all" maxlength="1" type="text" value="5">
+<input aria-label="Digit 6" class="w-11 sm:w-13 h-13 sm:h-14 aspect-square text-center font-bold text-lg sm:text-xl text-neutral-dark bg-slate-50/70 border border-slate-200 rounded-xl focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary focus:outline-none transition-all" maxlength="1" type="text" value="6">
+</div>
+<!-- Resend Timer Context -->
+<div class="text-center text-xs text-slate-500 pt-1">
+              Didn't receive the code?
+              <a class="font-semibold text-primary hover:underline ml-1" href="#resend">
+                Resend Code (00:45)
+              </a>
+</div>
+<!-- Primary Action Button -->
+<button class="w-full py-3.5 px-4 bg-primary hover:bg-primary-hover text-white font-semibold text-sm sm:text-base rounded-xl flex items-center justify-center gap-2 shadow-btn-glow transition-all duration-200 active:scale-[0.99]" type="submit">
+<span class="">Verify Email</span>
+<svg aria-hidden="true" class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<!-- Divider -->
+<div class="relative flex items-center justify-center my-4">
+<div class="border-t border-slate-200 w-full"></div>
+<span class="bg-white px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-widest absolute">OR</span>
+</div>
+<!-- Secondary Outline Action -->
+<a class="w-full py-3.5 px-4 bg-white border border-slate-300 hover:border-slate-400 text-slate-700 font-semibold text-sm rounded-xl flex items-center justify-center gap-2 transition-all duration-200 hover:bg-slate-50 active:scale-[0.99]" href="signup.html">
+<svg aria-hidden="true" class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="">Back to Sign Up</span>
+</a>
+</form>
+</div>
+</section>
+<!-- END: RightColumn -->
+</div>
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: MinimalFooter -->
+<footer class="w-full max-w-7xl mx-auto px-6 py-4 text-center text-xs text-slate-400 relative z-10" data-purpose="footer-meta">
+<p class="">© 2025 Reason X Inc. All rights reserved.</p>
+</footer>
+<!-- END: MinimalFooter -->
+
+
+
+<script id="reasonx-auth">
+(function () {
+  const PAGES = {
+    home: 'index.html',
+    signup: 'signup.html',
+    role: 'role-selection.html',
+    verify: 'email-verification.html',
+    login: 'login.html',
+    student: 'student-dashboard.html',
+    tutor: 'ai-tutor.html',
+    teacher: 'teacher-dashboard.html'
+  };
+
+  window.ReasonXAuth = {
+    getRole() { return localStorage.getItem('reasonXRole') || ''; },
+    isLoggedIn() { return localStorage.getItem('reasonXLoggedIn') === 'true'; },
+    setRole(role) {
+      if (role === 'student' || role === 'teacher') localStorage.setItem('reasonXRole', role);
+    },
+    login(role) {
+      this.setRole(role);
+      localStorage.setItem('reasonXLoggedIn', 'true');
+      localStorage.setItem('reasonXLoginAt', new Date().toISOString());
+    },
+    logout() {
+      localStorage.removeItem('reasonXLoggedIn');
+      localStorage.removeItem('reasonXLoginAt');
+      window.location.href = PAGES.login;
+    },
+    goByRole() {
+      const role = this.getRole();
+      if (!this.isLoggedIn()) { window.location.href = PAGES.login; return; }
+      window.location.href = role === 'teacher' ? PAGES.teacher : PAGES.student;
+    }
+  };
+
+  window.RX = window.ReasonXAuth;
+})();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.querySelector('form');
+  const inputs = Array.from(document.querySelectorAll('input'));
+  function goLogin() {
+    localStorage.setItem('reasonXEmailVerified', 'true');
+    window.location.href = 'login.html';
+  }
+  if (form) {
+    form.addEventListener('submit', function (e) { e.preventDefault(); goLogin(); });
+  }
+  inputs.forEach(function (input) {
+    input.addEventListener('input', function () {
+      if (this.value.length >= 1) {
+        const next = inputs[inputs.indexOf(this) + 1];
+        if (next) next.focus();
+      }
+    });
+  });
+  document.querySelectorAll('a,button').forEach(function (el) {
+    if ((el.textContent || '').trim().toLowerCase().includes('resend')) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        alert('A new verification code has been sent.');
+      });
+    }
+  });
+});
+</script>
+
+</body></html>

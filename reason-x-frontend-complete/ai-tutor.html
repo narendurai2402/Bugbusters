@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reason X - AI Tutor</title>
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration with Target Theme Tokens -->
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "on-surface-variant": "#464555",
+          "on-tertiary-container": "#fcf6ff",
+          "on-primary-container": "#faf7ff",
+          "on-tertiary": "#ffffff",
+          "on-error": "#ffffff",
+          "inverse-primary": "#c1c1ff",
+          "error": "#ba1a1a",
+          "background": "#fbf8ff",
+          "inverse-on-surface": "#f1efff",
+          "surface-tint": "#4849da",
+          "secondary-fixed-dim": "#c3c0ff",
+          "on-error-container": "#93000a",
+          "on-surface": "#171933",
+          "on-primary": "#ffffff",
+          "surface-container": "#eeecff",
+          "outline-variant": "#c7c4d7",
+          "surface-variant": "#e0e0ff",
+          "on-secondary-fixed": "#0f0069",
+          "surface": "#fbf8ff",
+          "outline": "#767586",
+          "tertiary-fixed-dim": "#cebdff",
+          "on-tertiary-fixed-variant": "#4f319c",
+          "secondary": "#2f05ea",
+          "surface-dim": "#d7d7fa",
+          "on-secondary": "#ffffff",
+          "tertiary": "#6245b0",
+          "primary-container": "#5d5fef",
+          "on-tertiary-fixed": "#21005e",
+          "on-background": "#171933",
+          "on-primary-fixed-variant": "#2e2bc2",
+          "secondary-fixed": "#e2dfff",
+          "tertiary-fixed": "#e8ddff",
+          "surface-container-high": "#e7e6ff",
+          "on-primary-fixed": "#07006c",
+          "surface-bright": "#fbf8ff",
+          "surface-container-lowest": "#ffffff",
+          "secondary-container": "#4b3bff",
+          "surface-container-highest": "#e0e0ff",
+          "error-container": "#ffdad6",
+          "on-secondary-container": "#dbd8ff",
+          "tertiary-container": "#7b5fcb",
+          "primary-fixed-dim": "#c1c1ff",
+          "primary-fixed": "#e1e0ff",
+          "primary": "#4343d5",
+          "inverse-surface": "#2c2e49",
+          "surface-container-low": "#f4f2ff",
+          "on-secondary-fixed-variant": "#2d00e5"
+        },
+        borderRadius: {
+          "DEFAULT": "1rem",
+          "lg": "1.5rem",
+          "xl": "2rem",
+          "full": "9999px"
+        },
+        fontFamily: {
+          sans: ['"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'Consolas', 'Monaco', 'Courier New', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+<!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+  /* Custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #e0e0ff;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #c7c4d7;
+  }
+  .banner-gradient {
+    background: linear-gradient(135deg, #f4f2ff 0%, #eeecff 50%, #e0e0ff 100%);
+  }
+  .input-glow {
+    box-shadow: 0 10px 25px -5px rgba(93, 95, 239, 0.08), 0 8px 10px -6px rgba(93, 95, 239, 0.04);
+  }
+</style>
+</head>
+<body class="bg-background text-on-surface font-sans antialiased min-h-screen overflow-hidden">
+<!-- BEGIN: MainLayoutWrapper -->
+<div class="flex h-screen w-full overflow-hidden">
+<!-- BEGIN: LeftSidebar (Persistent Reason X Dashboard Nav) -->
+<aside class="w-64 bg-surface-container-lowest border-r border-outline-variant/30 flex flex-col justify-between shrink-0 select-none z-30">
+<div class="flex flex-col h-full">
+<!-- Logo Header -->
+<div class="h-16 flex items-center px-6 border-b border-outline-variant/20">
+<div class="flex items-center gap-2">
+<span class="text-2xl font-extrabold tracking-tight text-on-surface">Reason</span>
+<span class="text-2xl font-black text-primary">X</span>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-sm transition-all group" href="#">
+<svg class="w-5 h-5 text-outline group-hover:text-primary stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Dashboard</span>
+</a>
+<!-- My Learning -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-sm transition-all group" href="#">
+<svg class="w-5 h-5 text-outline group-hover:text-primary stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>My Learning</span>
+</a>
+<!-- AI Tutor (Active Item) -->
+<div class="relative">
+<span class="absolute left-0 top-1.5 bottom-1.5 w-1 bg-primary rounded-r-md"></span>
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-surface-container text-primary font-bold text-sm transition-all shadow-xs" href="#">
+<svg class="w-5 h-5 text-primary stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L4.2 15.3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>AI Tutor</span>
+<span class="ml-auto bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">v4.0</span>
+</a>
+</div>
+<!-- Practice -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-sm transition-all group" href="#">
+<svg class="w-5 h-5 text-outline group-hover:text-primary stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Practice</span>
+</a>
+<!-- Quizzes -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-sm transition-all group" href="#">
+<svg class="w-5 h-5 text-outline group-hover:text-primary stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Quizzes</span>
+</a>
+<!-- Progress -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-sm transition-all group" href="#">
+<svg class="w-5 h-5 text-outline group-hover:text-primary stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Progress</span>
+</a>
+<!-- Notes -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-sm transition-all group" href="#">
+<svg class="w-5 h-5 text-outline group-hover:text-primary stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Notes</span>
+</a>
+<!-- Projects -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-sm transition-all group" href="#">
+<svg class="w-5 h-5 text-outline group-hover:text-primary stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Projects</span>
+</a>
+<!-- Calendar -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-sm transition-all group" href="#">
+<svg class="w-5 h-5 text-outline group-hover:text-primary stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Calendar</span>
+</a>
+<div class="pt-3 pb-1 border-t border-outline-variant/30 my-2"></div>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-sm transition-all group" href="#">
+<svg class="w-5 h-5 text-outline group-hover:text-primary stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Settings</span>
+</a>
+<!-- Help & Support -->
+<a class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-medium text-sm transition-all group" href="#">
+<svg class="w-5 h-5 text-outline group-hover:text-primary stroke-[1.8]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Help &amp; Support</span>
+</a>
+</nav>
+<!-- Bottom Log Out -->
+<div class="p-3 border-t border-outline-variant/20">
+<a class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-error hover:bg-error-container/40 font-semibold text-sm transition-all" href="#">
+<svg class="w-5 h-5 stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Log Out</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContentArea (Full Height Canvas) -->
+<div class="flex-1 flex flex-col h-full overflow-hidden bg-background">
+<!-- BEGIN: TopHeader -->
+<header class="h-16 bg-surface-container-lowest border-b border-outline-variant/30 px-6 flex items-center justify-between shrink-0 z-20">
+<!-- Search bar -->
+<div class="relative w-80 md:w-96">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-outline">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+<input class="w-full pl-10 pr-4 py-2 rounded-xl bg-surface-container-low border border-outline-variant/40 text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all" placeholder="Search topics, questions, code..." type="text"/>
+</div>
+<!-- Header Right: Model indicator, notification & profile -->
+<div class="flex items-center gap-4">
+<!-- Active Subject Pill -->
+<div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container text-xs font-semibold text-primary border border-outline-variant/40">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span>Data Structures &amp; Algorithms</span>
+</div>
+<!-- Notification Bell -->
+<button class="relative p-2 rounded-xl text-on-surface-variant hover:bg-surface-container transition-colors" title="Notifications">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path>
+</svg>
+<span class="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-error text-[10px] font-bold text-white leading-none">2</span>
+</button>
+<!-- User Profile -->
+<div class="flex items-center gap-3 pl-2 cursor-pointer border-l border-outline-variant/30">
+<div class="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            S
+          </div>
+<div class="hidden sm:flex flex-col text-left leading-tight">
+<span class="text-sm font-bold text-on-surface">Sakthi</span>
+<span class="text-[11px] text-on-surface-variant font-medium">Student • CS Year 2</span>
+</div>
+<svg class="w-4 h-4 text-outline stroke-[2]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+</header>
+<!-- END: TopHeader -->
+<!-- BEGIN: Full Canvas Workspace with Sub-Sidebar, Chat, & Companion Panel -->
+<div class="flex-1 flex overflow-hidden w-full">
+<!-- 1. Sleek ChatGPT-style Thread History Sidebar -->
+<aside class="w-64 bg-surface-container-low border-r border-outline-variant/30 hidden lg:flex flex-col shrink-0 select-none">
+<!-- New Chat Button -->
+<div class="p-3.5 border-b border-outline-variant/20">
+<button class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/50 hover:border-primary/50 text-sm font-bold text-on-surface hover:text-primary transition shadow-xs group">
+<span class="flex items-center gap-2">
+<svg class="w-4 h-4 text-primary group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+</svg>
+<span>New Tutoring Chat</span>
+</span>
+<kbd class="text-[10px] font-mono text-outline bg-surface-container px-1.5 py-0.5 rounded">⌘K</kbd>
+</button>
+</div>
+<!-- Thread List -->
+<div class="flex-1 overflow-y-auto px-2 py-3 space-y-4">
+<div>
+<div class="px-2 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-outline">Today</div>
+<div class="space-y-0.5">
+<a class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-surface-container-highest/60 text-primary font-semibold text-xs transition border border-outline-variant/30" href="#">
+<svg class="w-4 h-4 shrink-0 text-primary" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="truncate">Stack in Data Structures &amp; LIFO</span>
+</a>
+<a class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-on-surface text-xs transition" href="#">
+<svg class="w-4 h-4 shrink-0 text-outline" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="truncate">Binary Trees &amp; Traversal Notes</span>
+</a>
+</div>
+</div>
+<div>
+<div class="px-2 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-outline">Previous 7 Days</div>
+<div class="space-y-0.5">
+<a class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-on-surface text-xs transition" href="#">
+<svg class="w-4 h-4 shrink-0 text-outline" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="truncate">Python Recursion &amp; Memoization</span>
+</a>
+<a class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-on-surface text-xs transition" href="#">
+<svg class="w-4 h-4 shrink-0 text-outline" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="truncate">Calculus Derivatives Proofs</span>
+</a>
+<a class="flex items-center gap-2.5 px-2.5 py-2 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-on-surface text-xs transition" href="#">
+<svg class="w-4 h-4 shrink-0 text-outline" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="truncate">Web Dev Flexbox &amp; Grid Cheatsheet</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Mode & Token Status -->
+<div class="p-3 bg-surface-container/60 border-t border-outline-variant/30 text-xs">
+<div class="flex items-center justify-between text-on-surface-variant mb-1">
+<span class="font-medium">AI Reasoning Mode</span>
+<span class="text-primary font-bold">Deep Tutor</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 78%"></div>
+</div>
+<div class="flex justify-between items-center text-[10px] text-outline mt-1 font-medium">
+<span>Daily Pro Quota</span>
+<span>78% remaining</span>
+</div>
+</div>
+</aside>
+<!-- 2. Main Full-Height ChatGPT Style Conversation Canvas -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-surface-container-lowest relative">
+<!-- Top Tutor Sub-header & Action Bar -->
+<div class="h-14 px-6 border-b border-outline-variant/20 bg-surface-container-lowest/80 backdrop-blur-md flex items-center justify-between shrink-0 z-10">
+<div class="flex items-center gap-3">
+<!-- Model Badge -->
+<div class="flex items-center gap-2 px-3 py-1 rounded-lg bg-surface-container-low border border-outline-variant/40">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="text-xs font-bold text-on-surface">Reason X AI Tutor v4.0</span>
+<span class="text-[10px] text-outline font-semibold border-l border-outline-variant/40 pl-2">24/7 Smart Companion</span>
+</div>
+</div>
+<!-- Quick Action Pills -->
+<div class="hidden xl:flex items-center gap-1.5 text-xs font-medium">
+<button class="px-2.5 py-1 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition flex items-center gap-1">
+<span>💡</span> Explain
+            </button>
+<button class="px-2.5 py-1 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition flex items-center gap-1">
+<span>💻</span> Code Debug
+            </button>
+<button class="px-2.5 py-1 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition flex items-center gap-1">
+<span>📝</span> Practice Quiz
+            </button>
+<button class="px-2.5 py-1 rounded-lg hover:bg-surface-container text-on-surface-variant hover:text-primary transition flex items-center gap-1">
+<span>📐</span> Step Proof
+            </button>
+</div>
+<!-- Right Utility Buttons -->
+<div class="flex items-center gap-2">
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition" title="Export Chat">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition" title="Clear Conversation">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Scrollable Chat Stream (Expansive, Centered max-w-4xl for optimum readability) -->
+<div class="flex-1 overflow-y-auto px-4 md:px-8 py-6 space-y-7">
+<div class="max-w-4xl mx-auto space-y-7">
+<!-- Hero Welcome Card inside stream (Clean & Integrated) -->
+<div class="relative w-full rounded-2xl banner-gradient border border-outline-variant/40 p-6 overflow-hidden flex flex-col md:flex-row justify-between items-center shadow-xs">
+<div class="max-w-xl z-10">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/80 text-primary text-[11px] font-bold mb-2.5 border border-primary-fixed">
+<span>⚡ Reason X Academic Engine Active</span>
+</div>
+<h1 class="text-2xl font-black text-on-surface tracking-tight mb-1.5">Hi Sakthi, ready to master Data Structures?</h1>
+<p class="text-xs text-on-surface-variant leading-relaxed mb-4">
+                  Ask any question, request visual ASCII diagrams, practice step-by-step algorithms, or generate tailored mock questions.
+                </p>
+<div class="flex flex-wrap gap-2 text-xs font-semibold">
+<button class="px-3 py-1.5 rounded-full bg-white text-primary shadow-xs hover:bg-surface-container transition border border-primary-fixed flex items-center gap-1.5">
+<span>💡</span> Explain Concepts
+                  </button>
+<button class="px-3 py-1.5 rounded-full bg-white text-primary shadow-xs hover:bg-surface-container transition border border-primary-fixed flex items-center gap-1.5">
+<span>⚙️</span> Solve Problems
+                  </button>
+<button class="px-3 py-1.5 rounded-full bg-white text-primary shadow-xs hover:bg-surface-container transition border border-primary-fixed flex items-center gap-1.5">
+<span>📅</span> Create Study Plan
+                  </button>
+<button class="px-3 py-1.5 rounded-full bg-white text-primary shadow-xs hover:bg-surface-container transition border border-primary-fixed flex items-center gap-1.5">
+<svg class="w-3.5 h-3.5 text-primary" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>24/7 Guidance</span>
+</button>
+</div>
+</div>
+<!-- Mascot Robot Graphic -->
+<div class="relative hidden md:flex shrink-0 w-48 h-32 items-center justify-center">
+<div class="relative flex flex-col items-center">
+<!-- Floating badges -->
+<div class="absolute -top-3 -left-3 bg-amber-400 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-md text-xs">💡</div>
+<div class="absolute top-6 -left-6 bg-primary text-white font-mono text-[9px] px-1.5 py-0.5 rounded shadow-md font-bold">&lt;/&gt;</div>
+<div class="absolute -top-2 right-0 text-xl drop-shadow">🎓</div>
+<div class="absolute bottom-2 -right-3 bg-secondary text-white px-1.5 py-0.5 rounded text-[10px] font-bold shadow-md">O(1)</div>
+<!-- Robot Head -->
+<div class="w-20 h-16 bg-white rounded-2xl border-4 border-primary/40 flex items-center justify-center shadow-lg relative">
+<div class="w-13 h-9 bg-[#0B1536] rounded-xl flex items-center justify-center gap-1.5 px-2">
+<span class="w-2 h-3 bg-cyan-400 rounded-full animate-pulse"></span>
+<span class="w-2 h-3 bg-cyan-400 rounded-full animate-pulse"></span>
+</div>
+<div class="absolute -top-2.5 w-1.5 h-2.5 bg-primary/60 rounded-t-full"></div>
+<div class="absolute -top-4 w-2 h-2 bg-cyan-400 rounded-full"></div>
+</div>
+<!-- Bot badge -->
+<div class="-mt-2 px-3 py-0.5 bg-primary text-white rounded-md text-center font-bold text-[9px] tracking-wide shadow-sm border border-primary-fixed">
+                    Reason X
+                  </div>
+</div>
+</div>
+</div>
+<!-- CHAT MESSAGE 1: BOT GREETING -->
+<div class="flex items-start gap-3.5 group">
+<!-- Bot Avatar (Reason X Robot) -->
+<div class="w-9 h-9 rounded-xl bg-surface-container border border-outline-variant/60 flex items-center justify-center shrink-0 shadow-xs mt-0.5">
+<div class="w-6 h-5 bg-[#0e1726] rounded-md flex items-center justify-center gap-0.5">
+<span class="w-1 h-1 bg-cyan-400 rounded-full"></span>
+<span class="w-1 h-1 bg-cyan-400 rounded-full"></span>
+</div>
+</div>
+<!-- Message Content Bubble -->
+<div class="flex-1 space-y-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="text-xs font-bold text-on-surface">Reason X AI</span>
+<span class="text-[10px] text-outline">10:24 AM</span>
+</div>
+<div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl rounded-tl-sm p-4 text-on-surface text-sm leading-relaxed max-w-2xl shadow-2xs">
+<p class="font-semibold text-on-surface mb-1">Hello Sakthi! 👋</p>
+<p class="text-on-surface-variant mb-2">
+                    I'm your <span class="font-semibold text-primary">Reason X AI Tutor</span>. I can help you with your studies, explain concepts, solve problems, create study plans, and guide you step by step.
+                  </p>
+<p class="text-on-surface font-medium">What would you like to master today?</p>
+</div>
+</div>
+</div>
+<!-- CHAT MESSAGE 2: USER PROMPT -->
+<div class="flex items-start justify-end gap-3 group">
+<div class="flex flex-col items-end space-y-1 max-w-xl">
+<div class="flex items-center gap-2 mb-0.5">
+<span class="text-[10px] text-outline">10:25 AM</span>
+<span class="text-xs font-bold text-on-surface">Sakthi (You)</span>
+</div>
+<div class="bg-primary text-white rounded-2xl rounded-tr-sm px-5 py-3 text-sm font-medium shadow-xs">
+                  Explain stack in Data Structures.
+                </div>
+</div>
+<!-- User Avatar -->
+<div class="w-9 h-9 rounded-xl bg-primary-container text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs mt-0.5">
+                S
+              </div>
+</div>
+<!-- CHAT MESSAGE 3: RICH AI BOT EXPLANATION -->
+<div class="flex items-start gap-3.5 group">
+<!-- Bot Avatar -->
+<div class="w-9 h-9 rounded-xl bg-surface-container border border-outline-variant/60 flex items-center justify-center shrink-0 shadow-xs mt-0.5">
+<div class="w-6 h-5 bg-[#0e1726] rounded-md flex items-center justify-center gap-0.5">
+<span class="w-1 h-1 bg-cyan-400 rounded-full"></span>
+<span class="w-1 h-1 bg-cyan-400 rounded-full"></span>
+</div>
+</div>
+<!-- Message Content -->
+<div class="flex-1 space-y-2">
+<div class="flex items-center gap-2 mb-1">
+<span class="text-xs font-bold text-on-surface">Reason X AI</span>
+<span class="text-[10px] text-outline">10:25 AM</span>
+<span class="bg-surface-container text-primary text-[10px] font-semibold px-2 py-0.5 rounded-full">Detailed Analysis</span>
+</div>
+<div class="bg-surface-container-low border border-outline-variant/40 rounded-2xl rounded-tl-sm p-6 text-on-surface text-sm leading-relaxed shadow-2xs space-y-5">
+<p class="text-on-surface leading-normal text-[15px]">
+                    Sure! Let's break down the <strong class="text-primary font-bold">Stack</strong> data structure in a clean, visual, and intuitive way.
+                  </p>
+<!-- Concept Card 1: Definition & Real-world Analogy -->
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant/30">
+<h3 class="font-bold text-on-surface text-base mb-1.5 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                      1. What is a Stack?
+                    </h3>
+<p class="text-on-surface-variant mb-3">
+                      A stack is a linear data structure that follows the <strong class="text-on-surface font-semibold">LIFO (Last In, First Out)</strong> principle.
+                      This implies that the element inserted last is the very first one to be taken out.
+                    </p>
+<div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-high/40 text-xs text-on-surface border border-outline-variant/30">
+<span class="text-lg">🥞</span>
+<div>
+<strong class="font-bold">Real-world Analogy:</strong> A stack of cafeteria trays or pancakes. You place new trays on the top, and whoever takes a tray removes the top one first!
+                      </div>
+</div>
+</div>
+<!-- Concept Card 2: Operations table & Complexity -->
+<div>
+<h3 class="font-bold text-on-surface text-base mb-2 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                      2. Essential Stack Operations
+                    </h3>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 font-mono text-xs">
+<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-start gap-2">
+<span class="text-primary font-bold">push(val)</span>
+<span class="text-outline">→</span>
+<span class="text-on-surface-variant font-sans">Inserts element to top <strong class="font-mono text-emerald-600 font-bold ml-1">O(1)</strong></span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-start gap-2">
+<span class="text-primary font-bold">pop()</span>
+<span class="text-outline">→</span>
+<span class="text-on-surface-variant font-sans">Removes top element <strong class="font-mono text-emerald-600 font-bold ml-1">O(1)</strong></span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-start gap-2">
+<span class="text-primary font-bold">peek() / top()</span>
+<span class="text-outline">→</span>
+<span class="text-on-surface-variant font-sans">Reads top without removing <strong class="font-mono text-emerald-600 font-bold ml-1">O(1)</strong></span>
+</div>
+<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-start gap-2">
+<span class="text-primary font-bold">isEmpty()</span>
+<span class="text-outline">→</span>
+<span class="text-on-surface-variant font-sans">Returns true if stack empty <strong class="font-mono text-emerald-600 font-bold ml-1">O(1)</strong></span>
+</div>
+</div>
+</div>
+<!-- Concept Card 3: Syntax Highlighted Python Implementation -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<h3 class="font-bold text-on-surface text-base flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                        3. Python Implementation
+                      </h3>
+<span class="text-xs text-outline font-medium">Standard Array-based Stack</span>
+</div>
+<div class="rounded-xl overflow-hidden border border-outline-variant/40 bg-[#14142b] text-slate-100 shadow-sm font-mono text-xs">
+<!-- Code Block Header -->
+<div class="flex items-center justify-between px-4 py-2 bg-[#1d1d3b] border-b border-white/10 text-[11px] text-slate-300">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+<span class="ml-2 font-semibold text-slate-200">stack_demo.py</span>
+</div>
+<button class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 transition text-slate-200 text-[11px]" title="Copy Code">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Copy code</span>
+</button>
+</div>
+<!-- Code Content -->
+<pre class="p-4 overflow-x-auto leading-relaxed text-slate-200"><code><span class="text-purple-400">class</span> <span class="text-yellow-300">Stack</span>:
+    <span class="text-purple-400">def</span> <span class="text-blue-300">__init__</span>(<span class="text-orange-300">self</span>):
+        <span class="text-orange-300">self</span>.items = []
+
+    <span class="text-purple-400">def</span> <span class="text-blue-300">push</span>(<span class="text-orange-300">self</span>, item):
+        <span class="text-orange-300">self</span>.items.append(item)  <span class="text-slate-400"># O(1) amortized</span>
+
+    <span class="text-purple-400">def</span> <span class="text-blue-300">pop</span>(<span class="text-orange-300">self</span>):
+        <span class="text-purple-400">if not</span> <span class="text-orange-300">self</span>.is_empty():
+            <span class="text-purple-400">return</span> <span class="text-orange-300">self</span>.items.pop()
+        <span class="text-purple-400">raise</span> <span class="text-yellow-300">IndexError</span>(<span class="text-emerald-300">"pop from empty stack"</span>)
+
+    <span class="text-purple-400">def</span> <span class="text-blue-300">peek</span>(<span class="text-orange-300">self</span>):
+        <span class="text-purple-400">return</span> <span class="text-orange-300">self</span>.items[-<span class="text-teal-300">1</span>] <span class="text-purple-400">if not</span> <span class="text-orange-300">self</span>.is_empty() <span class="text-purple-400">else</span> <span class="text-orange-400">None</span>
+
+    <span class="text-purple-400">def</span> <span class="text-blue-300">is_empty</span>(<span class="text-orange-300">self</span>):
+        <span class="text-purple-400">return</span> <span class="text-blue-300">len</span>(<span class="text-orange-300">self</span>.items) == <span class="text-teal-300">0</span></code></pre>
+</div>
+</div>
+<!-- Interactive Action Bar below AI message -->
+<div class="flex flex-wrap items-center justify-between pt-3 border-t border-outline-variant/30 text-xs text-on-surface-variant">
+<div class="flex items-center gap-1">
+<button class="p-1.5 hover:bg-surface-container rounded-lg hover:text-primary transition flex items-center gap-1" title="Copy response">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Copy</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container rounded-lg hover:text-primary transition" title="Helpful">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="p-1.5 hover:bg-surface-container rounded-lg hover:text-error transition" title="Not helpful">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76 1.002m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<button class="p-1.5 hover:bg-surface-container rounded-lg hover:text-primary transition flex items-center gap-1" title="Read Aloud">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<button class="flex items-center gap-1 text-primary hover:underline font-semibold">
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Regenerate Response</span>
+</button>
+</div>
+</div>
+<!-- Follow-up Suggestion Chips directly under the response -->
+<div class="pt-2 flex flex-wrap items-center gap-2">
+<span class="text-xs font-semibold text-outline">Suggested follow-ups:</span>
+<button class="px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-xs font-medium text-on-surface hover:text-primary border border-outline-variant/40 transition">
+                    👉 Implement Stack using Linked List
+                  </button>
+<button class="px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-xs font-medium text-on-surface hover:text-primary border border-outline-variant/40 transition">
+                    📝 Generate 3 Practice LeetCode style problems
+                  </button>
+<button class="px-3 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-xs font-medium text-on-surface hover:text-primary border border-outline-variant/40 transition">
+                    🔍 How does Call Stack recursion work?
+                  </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. Modern ChatGPT-Style Floating Bottom Docked Prompt Input Bar -->
+<div class="shrink-0 p-4 md:px-8 pb-4 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/95 to-transparent">
+<div class="max-w-3xl mx-auto space-y-2">
+<!-- Floating Input Box -->
+<div class="relative bg-surface-container-lowest rounded-2xl md:rounded-3xl border border-outline-variant/60 shadow-lg input-glow focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 transition-all p-2 pl-3">
+<div class="flex items-center gap-2">
+<!-- Plus / Attachment Options -->
+<button class="p-2 rounded-xl text-outline hover:text-primary hover:bg-surface-container transition shrink-0" title="Attach code, PDF or image">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- Input area -->
+<input class="flex-1 bg-transparent border-0 text-sm text-on-surface placeholder:text-outline focus:ring-0 py-2.5 px-1 outline-none" placeholder="Ask Reason X anything... (e.g. solve problem, debug code, explain with diagram)" type="text"/>
+<!-- Web/Study Mode Toggle -->
+<button class="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-on-surface-variant hover:text-primary hover:bg-surface-container transition" title="Academic Search">
+<svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="hidden md:inline">Deep Search</span>
+</button>
+<!-- Audio / Voice Input -->
+<button class="p-2 rounded-xl text-outline hover:text-primary hover:bg-surface-container transition shrink-0" title="Voice Input">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- Prominent Send Button -->
+<button class="w-10 h-10 rounded-xl bg-primary hover:bg-primary-container text-white flex items-center justify-center shrink-0 shadow-md transition-transform active:scale-95" title="Send Question">
+<svg class="w-5 h-5 -rotate-45 ml-0.5" fill="currentColor" viewbox="0 0 20 20">
+<path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Disclaimer Footer below input -->
+<p class="text-center text-[11px] text-outline">
+              Reason X AI Tutor can make mistakes. Verify important academic and algorithmic solutions.
+            </p>
+</div>
+</div>
+</main>
+<!-- 4. Contextual Right Study Companion Panel (Eliminates all dead space & adds academic utility) -->
+<aside class="w-80 bg-surface-container-lowest border-l border-outline-variant/30 hidden 2xl:flex flex-col shrink-0 overflow-y-auto p-5 space-y-5 select-none">
+<!-- Header -->
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span class="text-xs font-bold uppercase tracking-wider text-on-surface">Study Companion</span>
+</div>
+<span class="text-[11px] text-primary font-bold bg-surface-container px-2 py-0.5 rounded-md">Live Context</span>
+</div>
+<!-- Card 1: Current Topic -->
+<div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3">
+<div class="text-[11px] font-bold text-outline uppercase tracking-wider">Active Focus</div>
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold text-lg shrink-0">
+              📚
+            </div>
+<div>
+<h4 class="text-sm font-bold text-on-surface leading-tight">Data Structures</h4>
+<p class="text-xs text-on-surface-variant mt-0.5">Stack, Queue &amp; Recursion</p>
+</div>
+</div>
+<!-- Knowledge Level Progress -->
+<div class="pt-2 border-t border-outline-variant/20 space-y-1.5">
+<div class="flex justify-between text-xs">
+<span class="font-medium text-on-surface-variant">Mastery Level</span>
+<span class="font-bold text-primary">Level 4 • Intermediate</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-2 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 60%"></div>
+</div>
+<p class="text-[11px] text-outline text-right">60% Mastered (3 of 5 topics completed)</p>
+</div>
+</div>
+<!-- Card 2: Key Concepts Mentioned in this Chat -->
+<div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-bold text-outline uppercase tracking-wider">Concepts In Thread</span>
+<span class="text-[10px] text-primary font-bold">4 concepts</span>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2 rounded-xl bg-surface-container-lowest text-xs border border-outline-variant/30">
+<span class="font-semibold text-on-surface">LIFO Principle</span>
+<span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold text-[10px]">Understood</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-xl bg-surface-container-lowest text-xs border border-outline-variant/30">
+<span class="font-semibold text-on-surface">Push / Pop O(1)</span>
+<span class="px-2 py-0.5 rounded bg-surface-container text-primary font-bold text-[10px]">Practicing</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded-xl bg-surface-container-lowest text-xs border border-outline-variant/30">
+<span class="font-semibold text-on-surface">Call Stack Memory</span>
+<span class="px-2 py-0.5 rounded bg-amber-50 text-amber-700 font-bold text-[10px]">Next up</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Recommended Practice Widget -->
+<div class="p-4 rounded-2xl bg-gradient-to-br from-primary-fixed/30 to-surface-container-high border border-primary/20 space-y-3">
+<div class="flex items-center gap-2">
+<span class="text-base">🎯</span>
+<h5 class="text-sm font-bold text-on-surface">Quick Stack Assessment</h5>
+</div>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+            Test your understanding with 5 fast diagnostic multiple-choice questions curated from your chat.
+          </p>
+<button class="w-full py-2.5 px-4 rounded-xl bg-primary text-white text-xs font-bold hover:bg-primary-container transition shadow-xs flex items-center justify-center gap-1.5">
+<span>Start Practice Quiz</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+<!-- Card 4: Need 1-on-1 Faculty Help? -->
+<div class="mt-auto p-4 rounded-2xl banner-gradient border border-outline-variant/40 relative overflow-hidden">
+<div class="relative z-10 space-y-1">
+<h5 class="text-xs font-bold text-on-surface">Stuck on complex proofs?</h5>
+<p class="text-[11px] text-on-surface-variant">Request a peer-mentor or live professor clarification ticket.</p>
+<button class="mt-2 text-xs font-bold text-primary hover:underline flex items-center gap-1">
+<span>Book Office Hours</span>
+<span>→</span>
+</button>
+</div>
+</div>
+</aside>
+</div>
+<!-- END: Full Canvas Workspace -->
+</div>
+<!-- END: MainContentArea -->
+</div>
+<!-- END: MainLayoutWrapper -->
+
+<script id="reasonx-auth">
+(function () {
+  const PAGES = {
+    home: 'index.html',
+    signup: 'signup.html',
+    role: 'role-selection.html',
+    verify: 'email-verification.html',
+    login: 'login.html',
+    student: 'student-dashboard.html',
+    tutor: 'ai-tutor.html',
+    teacher: 'teacher-dashboard.html'
+  };
+
+  window.ReasonXAuth = {
+    getRole() { return localStorage.getItem('reasonXRole') || ''; },
+    isLoggedIn() { return localStorage.getItem('reasonXLoggedIn') === 'true'; },
+    setRole(role) {
+      if (role === 'student' || role === 'teacher') localStorage.setItem('reasonXRole', role);
+    },
+    login(role) {
+      this.setRole(role);
+      localStorage.setItem('reasonXLoggedIn', 'true');
+      localStorage.setItem('reasonXLoginAt', new Date().toISOString());
+    },
+    logout() {
+      localStorage.removeItem('reasonXLoggedIn');
+      localStorage.removeItem('reasonXLoginAt');
+      window.location.href = PAGES.login;
+    },
+    goByRole() {
+      const role = this.getRole();
+      if (!this.isLoggedIn()) { window.location.href = PAGES.login; return; }
+      window.location.href = role === 'teacher' ? PAGES.teacher : PAGES.student;
+    }
+  };
+
+  window.RX = window.ReasonXAuth;
+})();
+</script>
+
+<script>
+(function () {
+  if (!RX.isLoggedIn()) { window.location.replace('login.html'); return; }
+  if (RX.getRole() !== 'student') { window.location.replace('teacher-dashboard.html'); return; }
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('a').forEach(function (a) {
+      const label=(a.textContent||'').trim().toLowerCase();
+      if (a.getAttribute('href') === '#') {
+        if (label.includes('dashboard')) a.href='student-dashboard.html';
+        else if (label.includes('ai tutor') || label.includes('tutor')) a.href='ai-tutor.html';
+      }
+      if (label.includes('log out') || label === 'logout' || label.includes('sign out')) {
+        a.href='login.html'; a.addEventListener('click', function(){ RX.logout(); });
+      }
+    });
+  });
+})();
+</script>
+
+</body></html>
