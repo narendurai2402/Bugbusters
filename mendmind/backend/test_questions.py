@@ -12,3 +12,10 @@ def test_question_bank_has_enough_variety_for_new_questions():
     assert len(QUESTION_BANKS["Math"]) >= 6, "Math bank should include a broad set of problems"
     assert len(QUESTION_BANKS["DSA"]) >= 6, "DSA bank should include a broad set of problems"
     assert len({q["concept"] for q in QUESTIONS.values()}) >= 10, "Question bank should cover many concept areas"
+
+
+def test_python_and_java_question_banks_are_available():
+    for subject in ("Python", "Java"):
+        questions = QUESTION_BANKS[subject]
+        assert len(questions) >= 3
+        assert all(question["category"] == subject for question in questions)

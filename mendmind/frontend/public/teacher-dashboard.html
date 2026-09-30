@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reason X - Teacher Dashboard</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Plus Jakarta Sans Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              500: '#5d5fef',
+              600: '#4e51eb',
+              700: '#4343d5',
+            },
+            surface: {
+              bg: '#f8f9ff',
+              card: '#ffffff',
+              subtle: '#f4f3ff',
+            }
+          },
+          boxShadow: {
+            'soft': '0 4px 20px -2px rgba(93, 95, 239, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03)',
+            'card-hover': '0 12px 30px -4px rgba(93, 95, 239, 0.12), 0 4px 10px -2px rgba(0, 0, 0, 0.04)',
+            'btn-glow': '0 6px 20px -2px rgba(93, 95, 239, 0.45)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #f7f8fd;
+      background-image: 
+        radial-gradient(circle at 10% 12%, rgba(220, 224, 255, 0.7) 0%, transparent 35%),
+        radial-gradient(circle at 90% 18%, rgba(235, 226, 255, 0.6) 0%, transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(214, 222, 255, 0.5) 0%, transparent 45%);
+      background-attachment: fixed;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #cbd5e1;
+    }
+  </style>
+</head>
+<body class="font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="w-full bg-white/95 backdrop-blur-md border-b border-indigo-50/80 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-[1600px] mx-auto px-6 lg:px-8 h-18 flex items-center justify-between">
+      
+      <!-- Brand & Search -->
+      <div class="flex items-center gap-10">
+        <a href="#teacher-dashboard" class="flex items-center gap-1.5 focus:outline-none">
+          <span class="text-2xl font-extrabold tracking-tight text-slate-900">Reason</span>
+          <span class="text-2xl font-extrabold tracking-tight text-brand-500">X</span>
+          <span class="ml-2 px-2 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-brand-50 text-brand-600 border border-brand-100">
+            Faculty
+          </span>
+        </a>
+
+        <!-- Global Search Bar -->
+        <div class="hidden md:flex items-center relative w-80">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z" />
+          </svg>
+          <input id="teacher-global-search" aria-describedby="teacher-search-status" 
+            type="text" 
+            placeholder="Search classes, students, assignments..." 
+            class="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 border border-slate-200/90 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all placeholder:text-slate-400"
+          />
+          <span id="teacher-search-status" class="sr-only" role="status" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center gap-4">
+        <!-- Quick Action: Schedule / Create -->
+          <button id="schedule-lecture-link" data-open-schedule type="button" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-brand-600 bg-brand-50 border border-brand-100/90 hover:bg-brand-100/70 transition-colors">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          New Class
+        </button>
+
+        <!-- Notification Bell -->
+        <div class="relative">
+          <button id="teacher-notifications-toggle" type="button" aria-label="Notifications" aria-expanded="false" aria-controls="teacher-notifications-panel" class="w-10 h-10 rounded-xl flex items-center justify-center text-slate-600 hover:text-brand-600 hover:bg-slate-100/80 transition-colors relative">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span id="teacher-notification-dot" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white"></span>
+          </button>
+          <div id="teacher-notifications-panel" class="absolute right-0 top-full z-40 mt-2 hidden w-72 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl">
+            <div class="flex items-center justify-between"><h2 class="text-sm font-bold text-slate-900">Dashboard notifications</h2><button id="teacher-notifications-close" type="button" aria-label="Close notifications" class="rounded-lg px-2 py-1 text-slate-500 hover:bg-slate-100">×</button></div>
+            <p id="teacher-notifications-summary" class="mt-3 text-sm text-slate-600">Loading assignment and learner updates...</p>
+            <div class="mt-3 flex gap-3 border-t border-slate-100 pt-3 text-xs font-semibold"><a class="text-brand-600 hover:text-brand-800" href="#teacher-assignments">Assignments</a><a class="text-brand-600 hover:text-brand-800" href="#teacher-risk-heading">Students needing support</a></div>
+          </div>
+        </div>
+
+        <!-- Academic Semester Badge -->
+        <div class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 text-xs font-semibold text-slate-600">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Fall 2025 • Active</span>
+        </div>
+
+        <!-- Teacher Profile Dropdown -->
+        <div class="flex items-center gap-3 pl-2 border-l border-slate-200">
+          <a href="#teacher-settings" aria-label="Open teacher settings" class="relative group flex items-center gap-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/30">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 text-white font-bold text-sm flex items-center justify-center shadow-sm ring-2 ring-brand-100">
+              <span id="teacher-profile-initials">K</span>
+            </div>
+            <div class="hidden sm:block text-left">
+              <div class="text-sm font-bold text-slate-800 leading-tight flex items-center gap-1.5">
+                <span id="teacher-profile-name">Kumar</span>
+                <svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              <div class="text-[11px] font-medium text-slate-500">Senior Faculty • CS & IT</div>
+            </div>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </header>
+
+  <nav id="teacher-mobile-nav" aria-label="Faculty dashboard sections" class="sticky top-[69px] z-20 flex gap-2 overflow-x-auto border-b border-indigo-50 bg-white px-4 py-3 md:hidden">
+    <a href="#teacher-dashboard" class="shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold text-slate-600">Dashboard</a>
+    <a href="#teacher-classes" class="shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold text-slate-600">My Classes</a>
+    <a href="#teacher-assignments" class="shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold text-slate-600">Assignments</a>
+    <a href="#teacher-quizzes" class="shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold text-slate-600">Quizzes</a>
+    <a href="#teacher-live-classes" class="shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold text-slate-600">Live Classes</a>
+    <a href="#teacher-analytics" class="shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold text-slate-600">Analytics</a>
+    <a href="#teacher-settings" class="shrink-0 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold text-slate-600">Settings</a>
+  </nav>
+
+  <!-- ================= MAIN WORKSPACE BODY ================= -->
+  <div class="flex-1 max-w-[1600px] w-full mx-auto flex">
+    
+    <!-- ================= PERSISTENT LEFT SIDEBAR ================= -->
+    <aside class="sticky top-[72px] h-[calc(100vh-72px)] w-64 flex-shrink-0 overflow-y-auto bg-white border-r border-indigo-50/90 py-6 px-4 hidden md:flex flex-col justify-between">
+      <div>
+        
+          <script>
+            document.getElementById('teacher-subject-list').replaceChildren();
+          </script>
+
+        <!-- Navigation Menu -->
+        <nav class="space-y-1.5">
+          <!-- Active: Dashboard -->
+          <a href="#teacher-dashboard" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-brand-50 text-brand-600 font-bold text-sm transition-all shadow-sm" aria-current="page">
+            <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span>Dashboard</span>
+          </a>
+
+          <!-- My Classes -->
+          <a href="#teacher-classes" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-semibold text-sm transition-colors">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span>My Classes</span>
+            </div>
+            <span id="teacher-class-count" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-600">0</span>
+          </a>
+
+          <!-- Assignments -->
+          <a href="#teacher-assignments" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-semibold text-sm transition-colors">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span>Assignments</span>
+            </div>
+            <span id="teacher-assignment-count" class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-600">0</span>
+          </a>
+
+          <!-- Quizzes -->
+          <a href="#teacher-quizzes" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-semibold text-sm transition-colors">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+            <span>Quizzes</span>
+          </a>
+
+          <!-- Live Classes -->
+          <a href="#teacher-live-classes" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-semibold text-sm transition-colors">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span>Live Classes</span>
+            </div>
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+          </a>
+
+          <!-- Analytics -->
+          <a href="#teacher-analytics" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-semibold text-sm transition-colors">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            <span>Analytics</span>
+          </a>
+
+          <!-- Settings -->
+          <a href="#teacher-settings" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-semibold text-sm transition-colors">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <!-- Teaching Assistant AI Banner Card -->
+        <div class="mt-8 p-4 rounded-2xl bg-gradient-to-br from-brand-50 to-indigo-50/50 border border-brand-100/80">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 rounded-lg bg-brand-500 text-white flex items-center justify-center text-xs">✨</span>
+            <span class="text-xs font-bold text-slate-800">Reason AI Co-Teacher</span>
+          </div>
+          <p class="text-xs text-slate-500 leading-relaxed">
+            Auto-grade submissions & generate lesson quizzes with AI assistance.
+          </p>
+          <a href="#teacher-quizzes" class="mt-3 block w-full py-1.5 text-center text-xs font-bold text-brand-600 bg-white rounded-lg shadow-sm border border-brand-100 hover:bg-brand-50 transition-colors">
+            Open Quiz Builder
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Footer logout & support -->
+      <div class="pt-6 border-t border-slate-100">
+        <a href="login.html" class="flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <span>Sign Out</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- ================= RIGHT MAIN CONTENT AREA ================= -->
+    <main class="flex-1 p-6 lg:p-10 overflow-y-auto">
+      <div id="teacher-dashboard" class="max-w-6xl mx-auto space-y-8 scroll-mt-24">
+        
+        <!-- ================= WELCOME HEADER SECTION ================= -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-brand-600 bg-brand-50 px-2.5 py-1 rounded-full border border-brand-100">
+                Department of Information Technology
+              </span>
+            </div>
+            <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight mt-2 flex items-center gap-2">
+              Good Morning, <span id="teacher-welcome-name">Kumar</span> <span class="text-2xl animate-pulse">👋</span>
+            </h1>
+            <p class="text-sm text-slate-500 mt-1">
+              Here is what is happening across your classes and student submissions today.
+            </p>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="flex items-center gap-3">
+            <button data-open-schedule type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50 shadow-sm transition-all">
+              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>Schedule Lecture</span>
+            </button>
+            <button id="open-assignment-dialog" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-500 text-white text-sm font-bold shadow-btn-glow hover:bg-brand-600 transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              <span>Create Assignment</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= STATS SUMMARY CARDS ================= -->
+        <div id="teacher-analytics" class="grid grid-cols-1 sm:grid-cols-3 gap-5 scroll-mt-24">
+          
+          <!-- Card 1: Classes -->
+          <div class="bg-white rounded-2xl p-6 border border-indigo-50/90 shadow-soft hover:shadow-card-hover transition-all relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Subjects Available</p>
+                <h3 id="teacher-subject-count" class="text-4xl font-extrabold text-slate-900 mt-2">0</h3>
+                <p class="text-xs font-semibold text-emerald-600 mt-2 flex items-center gap-1">
+                  <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  From the live question bank
+                </p>
+              </div>
+              <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-brand-600 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                📚
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <span>Reason X subjects</span>
+              <span class="font-semibold text-brand-600">Live data</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Students -->
+          <div class="bg-white rounded-2xl p-6 border border-indigo-50/90 shadow-soft hover:shadow-card-hover transition-all relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Total Students</p>
+                <h3 id="teacher-student-count" class="text-4xl font-extrabold text-slate-900 mt-2">0</h3>
+                <p class="text-xs font-semibold text-brand-600 mt-2 flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                  Learners in class analytics
+                </p>
+              </div>
+              <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                🎓
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <span>Tracked in Reason X</span>
+              <span class="font-semibold text-brand-600">Live data</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Pending Tasks / Submissions -->
+          <div class="bg-white rounded-2xl p-6 border border-indigo-50/90 shadow-soft hover:shadow-card-hover transition-all relative overflow-hidden group">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Students At Risk</p>
+                <h3 id="teacher-risk-count" class="text-4xl font-extrabold text-slate-900 mt-2">0</h3>
+                <p class="text-xs font-semibold text-amber-600 mt-2 flex items-center gap-1">
+                  <span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span>
+                  Mastery needs attention
+                </p>
+              </div>
+              <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                📝
+              </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+              <span>Based on learner mastery</span>
+              <span class="font-semibold text-amber-600">Live data</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ================= MY CLASSES SECTION ================= -->
+        <section id="teacher-classes" class="space-y-4 scroll-mt-24">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                Subject Performance
+                <span id="teacher-subject-badge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-brand-600">Loading subjects</span>
+              </h2>
+              <p class="text-xs text-slate-500">Mastery and question coverage from the live backend.</p>
+              <p id="teacher-data-status" class="mt-1 text-xs text-slate-500" role="status">Loading live class data...</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <select id="teacher-subject-filter" aria-label="Filter subjects" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-600">
+                <option value="all">All subjects</option>
+                <option value="Math">Math</option>
+                <option value="DSA">DSA</option>
+                <option value="Science">Science</option>
+                <option value="Python">Python</option>
+                <option value="Java">Java</option>
+              </select>
+              <button id="teacher-subject-reset" type="button" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50">View All</button>
+            </div>
+          </div>
+
+          <!-- Classes List / Cards Grid -->
+          <div id="teacher-subject-list" class="space-y-4">
+
+            <!-- Primary Class Card (Python Programming - Featured from wireframe) -->
+            <div class="bg-white rounded-2xl p-6 sm:p-7 border-2 border-brand-500/30 shadow-card-hover relative overflow-hidden transition-all">
+              
+              <!-- Ambient Subtle Banner Gradient -->
+              <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-500 via-indigo-400 to-purple-500"></div>
+
+              <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                
+                <!-- Left: Title, Tag & Cohort Details -->
+                <div class="space-y-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-brand-50 text-brand-600 border border-brand-100">
+                      III Year - IT (Sec A & B)
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100 flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      On Track
+                    </span>
+                    <span class="text-xs text-slate-400">Course Code: IT304</span>
+                  </div>
+
+                  <div>
+                    <h3 class="text-2xl font-bold text-slate-900 group-hover:text-brand-600 transition-colors">
+                      Python Programming
+                    </h3>
+                    <p class="text-sm text-slate-500 mt-0.5">
+                      Object-Oriented Programming, Data Structures, Algorithms & NumPy/Pandas Lab
+                    </p>
+                  </div>
+
+                  <!-- Metadata Chips -->
+                  <div class="flex flex-wrap items-center gap-6 text-xs text-slate-600 pt-1">
+                    <div class="flex items-center gap-1.5">
+                      <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                      </svg>
+                      <span class="font-bold text-slate-900">42 Students</span> Enrolled
+                    </div>
+
+                    <div class="flex items-center gap-1.5">
+                      <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Next Lecture: <strong class="text-slate-800">Today, 02:00 PM (Lab 4)</strong></span>
+                    </div>
+
+                    <div class="flex items-center gap-1.5">
+                      <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span class="font-semibold text-amber-700">8 pending reviews</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Progress Meter & CTA Button -->
+                <div class="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end justify-between gap-4 min-w-[260px]">
+                  
+                  <!-- Progress Bar -->
+                  <div class="w-full space-y-1.5">
+                    <div class="flex items-center justify-between text-xs font-semibold">
+                      <span class="text-slate-500">Syllabus Completion</span>
+                      <span class="text-brand-600 font-extrabold text-sm">78% Progress</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div class="h-full bg-gradient-to-r from-brand-500 to-indigo-600 rounded-full transition-all duration-500" style="width: 78%"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-400">
+                      <span>Module 4 of 5 complete</span>
+                      <span>12 / 16 Weeks</span>
+                    </div>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="flex items-center gap-3 w-full sm:w-auto lg:w-full justify-end">
+                    <button class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors">
+                      Class Feed
+                    </button>
+                    <button class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm shadow-btn-glow active:scale-[0.99] transition-all">
+                      <span>Open Class</span>
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
+                    </button>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Additional Class Card 2: Data Structures & Algorithms -->
+            <div class="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-soft hover:shadow-card-hover transition-all">
+              <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                
+                <div class="space-y-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-600 border border-indigo-100">
+                      II Year - CSE
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                      Active
+                    </span>
+                    <span class="text-xs text-slate-400">Course Code: CS202</span>
+                  </div>
+
+                  <div>
+                    <h3 class="text-xl font-bold text-slate-900">
+                      Data Structures & Algorithms
+                    </h3>
+                    <p class="text-sm text-slate-500 mt-0.5">
+                      Linear Lists, Trees, Graphs, Sorting & Dynamic Programming
+                    </p>
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-6 text-xs text-slate-600 pt-1">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-bold text-slate-900">38 Students</span>
+                    </div>
+                    <div>
+                      <span>Next Lecture: <strong class="text-slate-800">Tomorrow, 10:00 AM</strong></span>
+                    </div>
+                    <div class="text-amber-600 font-semibold">
+                      <span>6 submissions to grade</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end justify-between gap-4 min-w-[260px]">
+                  <div class="w-full space-y-1.5">
+                    <div class="flex items-center justify-between text-xs font-semibold">
+                      <span class="text-slate-500">Syllabus Completion</span>
+                      <span class="text-brand-600 font-extrabold text-sm">62% Progress</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div class="h-full bg-brand-500 rounded-full" style="width: 62%"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-400">
+                      <span>Module 3 of 5</span>
+                      <span>Binary Trees</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3 w-full sm:w-auto lg:w-full justify-end">
+                    <button class="px-5 py-2.5 rounded-xl border border-slate-200 hover:border-brand-500 hover:text-brand-600 text-slate-700 text-xs font-bold transition-all">
+                      Open Class →
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Additional Class Card 3: Cloud Computing & DevOps -->
+            <div class="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-soft hover:shadow-card-hover transition-all">
+              <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                
+                <div class="space-y-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-600 border border-blue-100">
+                      IV Year - IT
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                      Elective
+                    </span>
+                    <span class="text-xs text-slate-400">Course Code: IT408</span>
+                  </div>
+
+                  <div>
+                    <h3 class="text-xl font-bold text-slate-900">
+                      Cloud Computing & Architecture
+                    </h3>
+                    <p class="text-sm text-slate-500 mt-0.5">
+                      AWS Fundamentals, Microservices, Docker Containers & Serverless Functions
+                    </p>
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-6 text-xs text-slate-600 pt-1">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-bold text-slate-900">26 Students</span>
+                    </div>
+                    <div>
+                      <span>Next Lecture: <strong class="text-slate-800">Thursday, 11:30 AM</strong></span>
+                    </div>
+                    <div class="text-emerald-600 font-semibold">
+                      <span>All graded</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end justify-between gap-4 min-w-[260px]">
+                  <div class="w-full space-y-1.5">
+                    <div class="flex items-center justify-between text-xs font-semibold">
+                      <span class="text-slate-500">Syllabus Completion</span>
+                      <span class="text-brand-600 font-extrabold text-sm">85% Progress</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div class="h-full bg-brand-500 rounded-full" style="width: 85%"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-400">
+                      <span>Module 5 Capstone</span>
+                      <span>Final Projects</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3 w-full sm:w-auto lg:w-full justify-end">
+                    <button class="px-5 py-2.5 rounded-xl border border-slate-200 hover:border-brand-500 hover:text-brand-600 text-slate-700 text-xs font-bold transition-all">
+                      Open Class →
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Additional Class Card 4: Web Technologies -->
+            <div class="bg-white rounded-2xl p-6 sm:p-7 border border-slate-200/90 shadow-soft hover:shadow-card-hover transition-all">
+              <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                
+                <div class="space-y-3">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-600 border border-purple-100">
+                      II Year - IT
+                    </span>
+                    <span class="text-xs text-slate-400">Course Code: IT201</span>
+                  </div>
+
+                  <div>
+                    <h3 class="text-xl font-bold text-slate-900">
+                      Web Development & UI Frameworks
+                    </h3>
+                    <p class="text-sm text-slate-500 mt-0.5">
+                      HTML5, Responsive CSS, Tailwind, JavaScript ES6+ and REST APIs
+                    </p>
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-6 text-xs text-slate-600 pt-1">
+                    <div class="flex items-center gap-1.5">
+                      <span class="font-bold text-slate-900">20 Students</span>
+                    </div>
+                    <div>
+                      <span>Next Lecture: <strong class="text-slate-800">Friday, 09:00 AM</strong></span>
+                    </div>
+                    <div class="text-amber-600 font-semibold">
+                      <span>4 submissions pending</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end justify-between gap-4 min-w-[260px]">
+                  <div class="w-full space-y-1.5">
+                    <div class="flex items-center justify-between text-xs font-semibold">
+                      <span class="text-slate-500">Syllabus Completion</span>
+                      <span class="text-brand-600 font-extrabold text-sm">45% Progress</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div class="h-full bg-brand-500 rounded-full" style="width: 45%"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] text-slate-400">
+                      <span>Module 2 of 5</span>
+                      <span>DOM & State</span>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center gap-3 w-full sm:w-auto lg:w-full justify-end">
+                    <button class="px-5 py-2.5 rounded-xl border border-slate-200 hover:border-brand-500 hover:text-brand-600 text-slate-700 text-xs font-bold transition-all">
+                      Open Class →
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          <section class="mt-8 space-y-3" aria-labelledby="teacher-risk-heading">
+            <div>
+              <h3 id="teacher-risk-heading" class="text-lg font-bold text-slate-900">Students needing support</h3>
+              <p class="text-xs text-slate-500">Learners with low mastery in at least one concept.</p>
+            </div>
+            <div id="teacher-at-risk-list" class="space-y-2" aria-live="polite">
+              <p class="text-sm text-slate-500">Loading learner analytics...</p>
+            </div>
+          </section>
+        </section>
+
+        <!-- ================= RECENT ACTIVITY & TODAY'S SCHEDULE ================= -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Today's Schedule Card -->
+          <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-soft">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+                <span class="w-7 h-7 rounded-lg bg-indigo-50 text-brand-600 flex items-center justify-center text-xs">📅</span>
+                Today's Lectures & Labs
+              </h3>
+              <a href="#teacher-live-classes" class="text-xs text-brand-600 font-bold hover:underline">Calendar</a>
+            </div>
+
+            <div class="py-6 text-center text-sm text-slate-500">No sessions scheduled yet.</div>
+          </div>
+
+          <!-- Pending Student Submissions Card -->
+          <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-soft">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-bold text-base text-slate-900 flex items-center gap-2">
+                <span class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center text-xs">⚡</span>
+                Action Required (Submissions)
+              </h3>
+              <a href="#teacher-assignments" class="text-xs text-brand-600 font-bold hover:underline">View assignments</a>
+            </div>
+
+            <div class="py-6 text-center text-sm text-slate-500">No student submissions to review.</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <section id="teacher-assignments" class="mx-auto mt-10 w-full max-w-6xl scroll-mt-24 space-y-5 px-6 lg:px-0" aria-labelledby="teacher-assignments-heading">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="text-xs font-bold uppercase tracking-wider text-brand-600">Teaching workspace</p>
+            <h2 id="teacher-assignments-heading" class="mt-1 text-2xl font-extrabold text-slate-900">Assignments</h2>
+            <p class="mt-1 text-sm text-slate-500">Review and create work from the live question bank.</p>
+          </div>
+          <button type="button" data-open-assignment class="rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-brand-600">Create Assignment</button>
+        </div>
+        <p id="teacher-assignments-status" class="text-sm text-slate-500" role="status" aria-live="polite">Loading assignments...</p>
+        <div id="teacher-assignment-list" class="grid gap-4 md:grid-cols-2"></div>
+      </section>
+
+      <section id="teacher-quizzes" class="mx-auto mt-10 w-full max-w-6xl scroll-mt-24 space-y-5 px-6 lg:px-0" aria-labelledby="teacher-quizzes-heading">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-brand-600">Question bank</p>
+          <h2 id="teacher-quizzes-heading" class="mt-1 text-2xl font-extrabold text-slate-900">Quizzes</h2>
+          <p class="mt-1 text-sm text-slate-500">Build a quiz from a subject’s current questions.</p>
+        </div>
+        <p id="teacher-quizzes-status" class="text-sm text-slate-500" role="status" aria-live="polite">Loading quiz subjects...</p>
+        <div id="teacher-quiz-list" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+      </section>
+
+      <section id="teacher-live-classes" class="mx-auto mt-10 w-full max-w-6xl scroll-mt-24 space-y-5 px-6 lg:px-0" aria-labelledby="teacher-live-heading">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-brand-600">Classroom</p>
+          <h2 id="teacher-live-heading" class="mt-1 text-2xl font-extrabold text-slate-900">Live Classes</h2>
+          <p class="mt-1 text-sm text-slate-500">Live sessions and lecture scheduling.</p>
+        </div>
+        <div class="flex flex-col items-start justify-between gap-4 rounded-2xl border border-amber-200 bg-amber-50/70 p-6 sm:flex-row sm:items-center">
+          <div>
+            <h3 class="font-bold text-slate-900">Schedule a lecture or lab</h3>
+            <p class="mt-1 max-w-2xl text-sm leading-6 text-slate-600">Sessions are saved in this browser. Shared scheduling is not available from the backend yet.</p>
+          </div>
+          <button type="button" data-open-schedule class="shrink-0 rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-brand-600">Schedule class</button>
+        </div>
+        <p id="teacher-schedule-status" class="text-sm text-slate-500" role="status" aria-live="polite"></p>
+        <div id="teacher-schedule-list" class="grid gap-3 md:grid-cols-2"></div>
+      </section>
+
+      <section id="teacher-settings" class="mx-auto my-10 w-full max-w-6xl scroll-mt-24 space-y-5 px-6 lg:px-0" aria-labelledby="teacher-settings-heading">
+        <div>
+          <p class="text-xs font-bold uppercase tracking-wider text-brand-600">Preferences</p>
+          <h2 id="teacher-settings-heading" class="mt-1 text-2xl font-extrabold text-slate-900">Settings</h2>
+          <p class="mt-1 text-sm text-slate-500">Manage this browser’s dashboard preferences.</p>
+        </div>
+        <form id="teacher-settings-form" class="max-w-2xl space-y-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+          <div class="grid gap-4 sm:grid-cols-2">
+            <label class="block text-sm font-semibold text-slate-700">Display name
+              <input id="teacher-setting-name" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" maxlength="80" />
+            </label>
+            <label class="block text-sm font-semibold text-slate-700">Account email
+              <input id="teacher-setting-email" class="mt-1.5 w-full rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500" readonly />
+            </label>
+          </div>
+          <label class="flex items-start gap-3 text-sm text-slate-700">
+            <input id="teacher-setting-refresh" type="checkbox" class="mt-0.5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" />
+            <span><span class="font-semibold">Refresh analytics automatically</span><span class="mt-0.5 block text-xs text-slate-500">Refresh class analytics while this dashboard is open.</span></span>
+          </label>
+          <label class="flex items-start gap-3 text-sm text-slate-700">
+            <input id="teacher-setting-notifications" type="checkbox" class="mt-0.5 rounded border-slate-300 text-brand-600 focus:ring-brand-500" />
+            <span><span class="font-semibold">Show dashboard notifications</span><span class="mt-0.5 block text-xs text-slate-500">Keep notification indicators visible in this browser.</span></span>
+          </label>
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="submit" class="rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-bold text-white hover:bg-brand-600">Save Preferences</button>
+            <p id="teacher-settings-status" class="text-sm text-slate-500" role="status" aria-live="polite"></p>
+          </div>
+          <p class="border-t border-slate-100 pt-4 text-xs leading-5 text-slate-500">Preferences are saved in this browser only. Account and notification settings are not yet stored by the backend.</p>
+        </form>
+      </section>
+    </main>
+
+  </div>
+
+
+<script id="reasonx-auth">
+(function () {
+  const PAGES = {
+    home: 'index.html',
+    signup: 'signup.html',
+    role: 'role-selection.html',
+    verify: 'email-verification.html',
+    login: 'login.html',
+    student: 'student-dashboard.html',
+    tutor: 'ai-tutor.html',
+    teacher: 'teacher-dashboard.html'
+  };
+
+  window.ReasonXAuth = {
+    getRole() { return localStorage.getItem('reasonXRole') || ''; },
+    isLoggedIn() { return localStorage.getItem('reasonXLoggedIn') === 'true'; },
+    setRole(role) {
+      if (role === 'student' || role === 'teacher') localStorage.setItem('reasonXRole', role);
+    },
+    login(role) {
+      this.setRole(role);
+      localStorage.setItem('reasonXLoggedIn', 'true');
+      localStorage.setItem('reasonXLoginAt', new Date().toISOString());
+    },
+    logout() {
+      localStorage.removeItem('reasonXLoggedIn');
+      localStorage.removeItem('reasonXLoginAt');
+      window.location.href = PAGES.login;
+    },
+    goByRole() {
+      const role = this.getRole();
+      if (!this.isLoggedIn()) { window.location.href = PAGES.login; return; }
+      window.location.href = role === 'teacher' ? PAGES.teacher : PAGES.student;
+    }
+  };
+
+  window.RX = window.ReasonXAuth;
+})();
+</script>
+
+<script>
+(function () {
+  if (!RX.isLoggedIn()) { window.location.replace('login.html'); return; }
+  if (RX.getRole() !== 'teacher') { window.location.replace('student-dashboard.html'); return; }
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('a').forEach(function (a) {
+      const label=(a.textContent||'').trim().toLowerCase();
+      if (a.getAttribute('href') === '#') {
+        if (label.includes('dashboard')) a.href='teacher-dashboard.html';
+        // Future teacher modules remain on-page until their HTML pages are added.
+      }
+      if (label.includes('log out') || label === 'logout' || label.includes('sign out')) {
+        a.href='login.html'; a.addEventListener('click', function(){ RX.logout(); });
+      }
+    });
+  });
+})();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function () {
+  const user = JSON.parse(localStorage.getItem('reasonXUser') || 'null');
+  if (!user || user.role !== 'teacher') return;
+
+  const status = document.getElementById('teacher-data-status');
+  const subjectList = document.getElementById('teacher-subject-list');
+  const riskList = document.getElementById('teacher-at-risk-list');
+  const preferences = JSON.parse(localStorage.getItem('reasonXTeacherSettings') || '{}');
+  const displayName = preferences.displayName || user.name || 'Teacher';
+  document.getElementById('teacher-profile-name').textContent = displayName;
+  document.getElementById('teacher-welcome-name').textContent = displayName;
+  document.getElementById('teacher-profile-initials').textContent = displayName
+    .split(/\s+/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase();
+  document.getElementById('teacher-setting-name').value = displayName;
+  document.getElementById('teacher-setting-email').value = user.email || '';
+  try {
+    const [analyticsResponse, subjectsResponse] = await Promise.all([
+      fetch('http://localhost:8000/api/analytics/class'),
+      fetch('http://localhost:8000/api/subjects')
+    ]);
+    const analytics = await analyticsResponse.json();
+    const subjectData = await subjectsResponse.json();
+    if (!analyticsResponse.ok) throw new Error(analytics.detail || 'Could not load class analytics.');
+    if (!subjectsResponse.ok) throw new Error(subjectData.detail || 'Could not load subjects.');
+
+    const subjects = subjectData.subjects || [];
+    const studentsAtRisk = analytics.atRisk || [];
+    document.getElementById('teacher-subject-count').textContent = subjects.length;
+    document.getElementById('teacher-student-count').textContent = analytics.students;
+    document.getElementById('teacher-risk-count').textContent = studentsAtRisk.length;
+    document.getElementById('teacher-subject-badge').textContent = `${subjects.length} live subjects`;
+
+    subjectList.replaceChildren();
+    subjects.forEach(function (subject) {
+      const mastery = Math.round((analytics.subjectAverages[subject.name] || 0) * 100);
+      const card = document.createElement('article');
+      card.className = 'rounded-2xl border border-slate-200 bg-white p-5 shadow-soft';
+      card.dataset.subject = subject.name;
+      const top = document.createElement('div');
+      top.className = 'flex flex-wrap items-start justify-between gap-3';
+      const title = document.createElement('h3');
+      title.className = 'text-lg font-bold text-slate-900';
+      title.textContent = subject.name;
+      const value = document.createElement('span');
+      value.className = 'text-sm font-extrabold text-brand-600';
+      value.textContent = `${mastery}% average mastery`;
+      top.append(title, value);
+      const description = document.createElement('p');
+      description.className = 'mt-1 text-xs text-slate-500';
+      description.textContent = `${subject.questionCount} questions across ${subject.concepts.length} concepts`;
+      const track = document.createElement('div');
+      track.className = 'mt-4 h-2 overflow-hidden rounded-full bg-slate-100';
+      const bar = document.createElement('div');
+      bar.className = 'h-full rounded-full bg-brand-500';
+      bar.style.width = `${mastery}%`;
+      track.append(bar);
+      card.append(top, description, track);
+      subjectList.append(card);
+    });
+
+    riskList.replaceChildren();
+    if (!studentsAtRisk.length) {
+      const empty = document.createElement('p');
+      empty.className = 'text-sm text-slate-500';
+      empty.textContent = 'No students are currently flagged for support.';
+      riskList.append(empty);
+    } else {
+      studentsAtRisk.forEach(function (student) {
+        const row = document.createElement('div');
+        row.className = 'flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-100 bg-amber-50/60 px-4 py-3 text-sm';
+        const name = document.createElement('span');
+        name.className = 'font-semibold text-slate-800';
+        name.textContent = student.name;
+        const detail = document.createElement('span');
+        detail.className = 'text-xs text-amber-800';
+        detail.textContent = `${Math.round(student.average * 100)}% mastery • Focus: ${student.weakestConcept}`;
+        row.append(name, detail);
+        riskList.append(row);
+      });
+    }
+    status.textContent = 'Live class analytics updated.';
+  } catch (error) {
+    status.textContent = error instanceof Error ? error.message : 'Class analytics are unavailable.';
+    subjectList.replaceChildren();
+    riskList.textContent = 'Could not load learner analytics. Check that the backend is running.';
+  }
+});
+</script>
+<dialog id="assignment-dialog" class="w-[min(92vw,34rem)] rounded-2xl border border-slate-200 p-0 shadow-2xl backdrop:bg-slate-900/40">
+  <form id="assignment-form" class="space-y-4 p-6">
+    <div class="flex items-center justify-between gap-4">
+      <h2 class="text-xl font-bold text-slate-900">Create Assignment</h2>
+      <button id="close-assignment-dialog" type="button" class="grid h-9 w-9 place-items-center rounded-lg text-slate-500 hover:bg-slate-100" aria-label="Close">×</button>
+    </div>
+    <label class="block text-sm font-semibold text-slate-700">Title
+      <input id="assignment-title" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" required maxlength="120" placeholder="e.g. Binary search practice" />
+    </label>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block text-sm font-semibold text-slate-700">Subject
+        <select id="assignment-subject" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+          <option value="Math">Math</option>
+          <option value="DSA">DSA</option>
+          <option value="Science">Science</option>
+          <option value="Python">Python</option>
+          <option value="Java">Java</option>
+        </select>
+      </label>
+      <label class="block text-sm font-semibold text-slate-700">Audience
+        <select id="assignment-mode" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
+          <option value="all">All students</option>
+          <option value="at_risk">Students at risk</option>
+        </select>
+      </label>
+    </div>
+    <label class="block text-sm font-semibold text-slate-700">Due date
+      <input id="assignment-due" type="date" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" />
+    </label>
+    <label class="block text-sm font-semibold text-slate-700">Note
+      <textarea id="assignment-note" rows="3" maxlength="500" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Optional instructions"></textarea>
+    </label>
+    <p id="assignment-feedback" class="text-sm text-slate-600" role="status" aria-live="polite"></p>
+    <div class="flex justify-end gap-2">
+      <button id="cancel-assignment" type="button" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+      <button id="submit-assignment" type="submit" class="rounded-lg bg-brand-500 px-4 py-2 text-sm font-bold text-white hover:bg-brand-600">Create</button>
+    </div>
+  </form>
+</dialog>
+<dialog id="teacher-schedule-dialog" class="w-[min(92vw,34rem)] rounded-2xl border border-slate-200 p-0 shadow-2xl backdrop:bg-slate-900/40">
+  <form id="teacher-schedule-form" class="space-y-4 p-6">
+    <div class="flex items-center justify-between gap-4"><div><h2 class="text-xl font-bold text-slate-900">Schedule a lecture or lab</h2><p class="mt-1 text-xs text-slate-500">Saved in this browser until shared scheduling is available.</p></div><button id="teacher-schedule-close" type="button" aria-label="Close schedule dialog" class="grid h-9 w-9 place-items-center rounded-lg text-slate-500 hover:bg-slate-100">×</button></div>
+    <label class="block text-sm font-semibold text-slate-700">Session title<input id="teacher-schedule-title" required maxlength="120" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Python Programming Lab" /></label>
+    <div class="grid gap-4 sm:grid-cols-2"><label class="block text-sm font-semibold text-slate-700">Date<input id="teacher-schedule-date" type="date" required class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" /></label><label class="block text-sm font-semibold text-slate-700">Time<input id="teacher-schedule-time" type="time" required class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" /></label></div>
+    <label class="block text-sm font-semibold text-slate-700">Room or meeting link<input id="teacher-schedule-location" maxlength="160" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Lab 4 or https://..." /></label>
+    <p id="teacher-schedule-feedback" class="text-sm text-slate-600" role="status" aria-live="polite"></p>
+    <div class="flex justify-end gap-2"><button id="teacher-schedule-cancel" type="button" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button><button type="submit" class="rounded-lg bg-brand-500 px-4 py-2 text-sm font-bold text-white hover:bg-brand-600">Save session</button></div>
+  </form>
+</dialog>
+<dialog id="teacher-review-dialog" class="w-[min(92vw,34rem)] rounded-2xl border border-slate-200 p-0 shadow-2xl backdrop:bg-slate-900/40">
+  <form id="teacher-review-form" class="space-y-4 p-6">
+    <div class="flex items-center justify-between gap-4"><div><h2 id="teacher-review-heading" class="text-xl font-bold text-slate-900">Review submission</h2><p id="teacher-review-detail" class="mt-1 text-sm text-slate-500"></p></div><button id="teacher-review-close" type="button" aria-label="Close review dialog" class="grid h-9 w-9 place-items-center rounded-lg text-slate-500 hover:bg-slate-100">×</button></div>
+    <p class="rounded-lg bg-amber-50 px-3 py-2 text-xs leading-5 text-amber-900">The current backend does not provide submission records. Review notes are saved in this browser only.</p>
+    <label class="block text-sm font-semibold text-slate-700">Feedback or follow-up<textarea id="teacher-review-note" rows="4" maxlength="1000" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Add feedback for your review record..."></textarea></label>
+    <p id="teacher-review-feedback" class="text-sm text-slate-600" role="status" aria-live="polite"></p>
+    <div class="flex justify-end gap-2"><button id="teacher-review-cancel" type="button" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button><button type="submit" class="rounded-lg bg-brand-500 px-4 py-2 text-sm font-bold text-white hover:bg-brand-600">Save review</button></div>
+  </form>
+</dialog>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const dialog = document.getElementById('assignment-dialog');
+  const form = document.getElementById('assignment-form');
+  const feedback = document.getElementById('assignment-feedback');
+  const submitButton = document.getElementById('submit-assignment');
+  document.getElementById('open-assignment-dialog').addEventListener('click', function () {
+    feedback.textContent = '';
+    dialog.showModal();
+  });
+  document.getElementById('cancel-assignment').addEventListener('click', function () { dialog.close(); });
+  document.getElementById('close-assignment-dialog').addEventListener('click', function () { dialog.close(); });
+  form.addEventListener('submit', async function (event) {
+    event.preventDefault();
+    submitButton.disabled = true;
+    feedback.textContent = 'Creating assignment...';
+    try {
+      const user = JSON.parse(localStorage.getItem('reasonXUser') || 'null');
+      const subject = document.getElementById('assignment-subject').value;
+      const questionsResponse = await fetch(`http://localhost:8000/api/questions?subject=${encodeURIComponent(subject)}`);
+      const questionData = await questionsResponse.json();
+      if (!questionsResponse.ok) throw new Error(questionData.detail || 'Could not load subject questions.');
+      const response = await fetch('http://localhost:8000/api/assignments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: document.getElementById('assignment-title').value.trim(),
+          subject,
+          questionIds: questionData.questions.map(function (question) { return question.id; }),
+          mode: document.getElementById('assignment-mode').value,
+          students: [],
+          due: document.getElementById('assignment-due').value || null,
+          note: document.getElementById('assignment-note').value.trim(),
+          teacher: user ? user.email : 'teacher'
+        })
+      });
+      const assignment = await response.json();
+      if (!response.ok) throw new Error(assignment.detail || 'Could not create assignment.');
+      feedback.textContent = `Assignment created: ${assignment.title} (${assignment.questionIds.length} questions).`;
+      document.getElementById('assignment-title').value = '';
+      document.getElementById('assignment-note').value = '';
+      window.dispatchEvent(new Event('teacher-assignments-updated'));
+    } catch (error) {
+      feedback.textContent = error instanceof Error ? error.message : 'Could not create assignment.';
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const assignmentsNode = document.getElementById('teacher-assignment-list');
+  const assignmentsStatus = document.getElementById('teacher-assignments-status');
+  const assignmentsBadge = document.getElementById('teacher-assignment-count');
+  const quizNode = document.getElementById('teacher-quiz-list');
+  const quizStatus = document.getElementById('teacher-quizzes-status');
+  const assignmentDialog = document.getElementById('assignment-dialog');
+  const assignmentFeedback = document.getElementById('assignment-feedback');
+  const navLinks = Array.from(document.querySelectorAll('aside nav a[href^="#teacher-"], #teacher-mobile-nav a[href^="#teacher-"]'));
+
+  function updateActiveNavigation() {
+    const activeHash = location.hash || '#teacher-dashboard';
+    navLinks.forEach(function (link) {
+      const active = link.getAttribute('href') === activeHash;
+      if (active) {
+        link.setAttribute('aria-current', 'location');
+        link.classList.add('bg-brand-50', 'text-brand-600', 'font-bold', 'shadow-sm');
+        link.classList.remove('text-slate-600', 'font-semibold');
+      } else {
+        link.removeAttribute('aria-current');
+        link.classList.remove('bg-brand-50', 'text-brand-600', 'font-bold', 'shadow-sm');
+        link.classList.add('text-slate-600', 'font-semibold');
+      }
+    });
+  }
+  window.addEventListener('hashchange', updateActiveNavigation);
+  updateActiveNavigation();
+
+  const subjectFilter = document.getElementById('teacher-subject-filter');
+  const subjectList = document.getElementById('teacher-subject-list');
+  const searchInput = document.getElementById('teacher-global-search');
+  const searchStatus = document.getElementById('teacher-search-status');
+  const searchableLists = [
+    subjectList,
+    document.getElementById('teacher-at-risk-list'),
+    document.getElementById('teacher-assignment-list'),
+    document.getElementById('teacher-quiz-list')
+  ];
+  function applyDashboardFilters() {
+    const selectedSubject = subjectFilter.value;
+    const query = searchInput.value.trim().toLowerCase();
+    let visibleResults = 0;
+    subjectList.querySelectorAll('article[data-subject]').forEach(function (card) {
+      const matchesSubject = selectedSubject === 'all' || card.dataset.subject === selectedSubject;
+      const matchesQuery = !query || card.textContent.toLowerCase().includes(query);
+      card.hidden = !matchesSubject || !matchesQuery;
+      if (!card.hidden) visibleResults += 1;
+    });
+    searchableLists.slice(1).forEach(function (list) {
+      list.querySelectorAll(':scope > *').forEach(function (card) {
+        card.hidden = Boolean(query) && !card.textContent.toLowerCase().includes(query);
+        if (!card.hidden && card.tagName !== 'P') visibleResults += 1;
+      });
+    });
+    searchStatus.textContent = query && !visibleResults ? 'No matching classes, students, assignments, or quizzes.' : query ? `${visibleResults} matching result${visibleResults === 1 ? '' : 's'}.` : '';
+  }
+  subjectFilter.addEventListener('change', applyDashboardFilters);
+  searchInput.addEventListener('input', applyDashboardFilters);
+  document.getElementById('teacher-subject-reset').addEventListener('click', function () {
+    subjectFilter.value = 'all';
+    searchInput.value = '';
+    applyDashboardFilters();
+  });
+  searchableLists.forEach(function (list) {
+    new MutationObserver(applyDashboardFilters).observe(list, { childList: true });
+  });
+
+  async function loadAssignments() {
+    try {
+      const response = await fetch('http://localhost:8000/api/assignments');
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Could not load assignments.');
+      const assignments = data.assignments || [];
+      assignmentsBadge.textContent = String(assignments.length);
+      assignmentsStatus.textContent = assignments.length ? `${assignments.length} assignments` : 'No assignments yet.';
+      assignmentsNode.replaceChildren();
+      if (!assignments.length) {
+        const empty = document.createElement('article');
+        empty.className = 'rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-sm text-slate-500 md:col-span-2';
+        empty.textContent = 'Your created assignments will appear here.';
+        assignmentsNode.append(empty);
+        return;
+      }
+      assignments.forEach(function (assignment) {
+        const card = document.createElement('article');
+        card.className = 'rounded-2xl border border-slate-200 bg-white p-5 shadow-soft';
+        const header = document.createElement('div');
+        header.className = 'flex flex-wrap items-start justify-between gap-3';
+        const title = document.createElement('h3');
+        title.className = 'font-bold text-slate-900';
+        title.textContent = assignment.title;
+        const subject = document.createElement('span');
+        subject.className = 'rounded-full bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-600';
+        subject.textContent = assignment.subject;
+        header.append(title, subject);
+        const detail = document.createElement('p');
+        detail.className = 'mt-3 text-sm text-slate-600';
+        detail.textContent = `${(assignment.questionIds || []).length} questions · ${assignment.mode.replace('_', ' ')} students`;
+        const note = document.createElement('p');
+        note.className = 'mt-2 text-xs leading-5 text-slate-500';
+        note.textContent = assignment.note || (assignment.due ? `Due ${assignment.due}` : 'No due date');
+        card.append(header, detail, note);
+        assignmentsNode.append(card);
+      });
+    } catch (error) {
+      assignmentsBadge.textContent = '–';
+      assignmentsStatus.textContent = error instanceof Error ? error.message : 'Could not load assignments.';
+    }
+  }
+
+  function openAssignment(subject, title) {
+    document.getElementById('assignment-subject').value = subject || 'Math';
+    document.getElementById('assignment-title').value = title || '';
+    document.getElementById('assignment-mode').value = 'all';
+    assignmentFeedback.textContent = '';
+    assignmentDialog.showModal();
+  }
+
+  document.querySelectorAll('[data-open-assignment]').forEach(function (button) {
+    button.addEventListener('click', function () { openAssignment(button.dataset.subject || 'Math', button.dataset.title || ''); });
+  });
+
+  async function loadQuizSubjects() {
+    try {
+      const response = await fetch('http://localhost:8000/api/subjects');
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Could not load quiz subjects.');
+      const subjects = data.subjects || [];
+      quizStatus.textContent = subjects.length ? 'Choose a subject to create a quiz assignment.' : 'No subjects are available.';
+      document.getElementById('teacher-class-count').textContent = String(subjects.length);
+      quizNode.replaceChildren();
+      subjects.forEach(function (subject) {
+        const card = document.createElement('article');
+        card.className = 'flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-soft';
+        const title = document.createElement('h3');
+        title.className = 'text-lg font-bold text-slate-900';
+        title.textContent = subject.name;
+        const detail = document.createElement('p');
+        detail.className = 'mt-1 flex-1 text-sm text-slate-500';
+        detail.textContent = `${subject.questionCount} questions across ${subject.concepts.length} concepts`;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'mt-5 rounded-xl border border-brand-100 bg-brand-50 px-4 py-2.5 text-sm font-bold text-brand-600 hover:bg-brand-100';
+        button.textContent = 'Create Quiz';
+        button.addEventListener('click', function () { openAssignment(subject.name, `${subject.name} Quiz`); });
+        card.append(title, detail, button);
+        quizNode.append(card);
+      });
+    } catch (error) {
+      quizStatus.textContent = error instanceof Error ? error.message : 'Could not load quiz subjects.';
+    }
+  }
+
+  document.getElementById('schedule-lecture-link').addEventListener('click', function () {
+    document.getElementById('teacher-schedule-dialog').showModal();
+  });
+
+  const user = JSON.parse(localStorage.getItem('reasonXUser') || 'null');
+  const preferences = JSON.parse(localStorage.getItem('reasonXTeacherSettings') || '{}');
+  const nameInput = document.getElementById('teacher-setting-name');
+  const emailInput = document.getElementById('teacher-setting-email');
+  const refreshInput = document.getElementById('teacher-setting-refresh');
+  const notificationsInput = document.getElementById('teacher-setting-notifications');
+  nameInput.value = preferences.displayName || (user && user.name) || '';
+  emailInput.value = (user && user.email) || '';
+  refreshInput.checked = preferences.autoRefresh !== false;
+  notificationsInput.checked = preferences.showNotifications !== false;
+  const notificationDot = document.getElementById('teacher-notification-dot');
+  notificationDot.classList.toggle('hidden', !notificationsInput.checked);
+
+  window.setTeacherAnalyticsRefresh = function (enabled) {
+    if (window.teacherAnalyticsRefreshTimer) window.clearInterval(window.teacherAnalyticsRefreshTimer);
+    window.teacherAnalyticsRefreshTimer = null;
+    if (!enabled) return;
+    window.teacherAnalyticsRefreshTimer = window.setInterval(async function () {
+      try {
+        const response = await fetch('http://localhost:8000/api/analytics/class');
+        const analytics = await response.json();
+        if (!response.ok) return;
+        document.getElementById('teacher-student-count').textContent = analytics.students;
+        document.getElementById('teacher-risk-count').textContent = (analytics.atRisk || []).length;
+      } catch {
+        document.getElementById('teacher-data-status').textContent = 'Could not refresh class analytics.';
+      }
+    }, 30000);
+  };
+  window.setTeacherAnalyticsRefresh(refreshInput.checked);
+
+  document.getElementById('teacher-settings-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const updated = {
+      displayName: nameInput.value.trim(),
+      autoRefresh: refreshInput.checked,
+      showNotifications: notificationsInput.checked
+    };
+    localStorage.setItem('reasonXTeacherSettings', JSON.stringify(updated));
+    notificationDot.classList.toggle('hidden', !updated.showNotifications);
+    window.setTeacherAnalyticsRefresh(updated.autoRefresh);
+    const heading = document.querySelector('main h1');
+    if (heading && heading.firstChild && updated.displayName) heading.firstChild.textContent = `Good Morning, ${updated.displayName} `;
+    document.getElementById('teacher-settings-status').textContent = 'Preferences saved in this browser.';
+  });
+
+  window.addEventListener('teacher-assignments-updated', loadAssignments);
+  loadAssignments();
+  loadQuizSubjects();
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const scheduleKey = 'reasonXTeacherSchedule';
+  const scheduleDialog = document.getElementById('teacher-schedule-dialog');
+  const scheduleForm = document.getElementById('teacher-schedule-form');
+  const scheduleList = document.getElementById('teacher-schedule-list');
+  const scheduleStatus = document.getElementById('teacher-schedule-status');
+  const scheduleFeedback = document.getElementById('teacher-schedule-feedback');
+  const scheduleDate = document.getElementById('teacher-schedule-date');
+  const reviewStorageKey = 'reasonXTeacherSubmissionReviews';
+  const reviewDialog = document.getElementById('teacher-review-dialog');
+  const reviewForm = document.getElementById('teacher-review-form');
+  const reviewNote = document.getElementById('teacher-review-note');
+  const reviewFeedback = document.getElementById('teacher-review-feedback');
+  const notificationToggle = document.getElementById('teacher-notifications-toggle');
+  const notificationPanel = document.getElementById('teacher-notifications-panel');
+  const notificationSummary = document.getElementById('teacher-notifications-summary');
+  const notificationDot = document.getElementById('teacher-notification-dot');
+  let activeReviewButton = null;
+
+  function readArray(key) {
+    try {
+      const value = JSON.parse(localStorage.getItem(key) || '[]');
+      return Array.isArray(value) ? value : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function localDateValue() {
+    const date = new Date();
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
+
+  function renderSchedule() {
+    const sessions = readArray(scheduleKey).sort((left, right) => `${left.date}T${left.time}`.localeCompare(`${right.date}T${right.time}`));
+    scheduleList.replaceChildren();
+    scheduleStatus.textContent = sessions.length ? `${sessions.length} session${sessions.length === 1 ? '' : 's'} saved in this browser.` : 'No sessions scheduled yet.';
+    sessions.forEach(function (session) {
+      const card = document.createElement('article');
+      card.className = 'flex items-start justify-between gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-soft';
+      const details = document.createElement('div');
+      const title = document.createElement('h3');
+      title.className = 'font-bold text-slate-900';
+      title.textContent = session.title;
+      const meta = document.createElement('p');
+      meta.className = 'mt-1 text-xs text-slate-500';
+      meta.textContent = `${session.date} at ${session.time}${session.location ? ` · ${session.location}` : ''}`;
+      details.append(title, meta);
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50';
+      remove.textContent = 'Remove';
+      remove.setAttribute('aria-label', `Remove ${session.title}`);
+      remove.addEventListener('click', function () {
+        localStorage.setItem(scheduleKey, JSON.stringify(readArray(scheduleKey).filter(item => item.id !== session.id)));
+        renderSchedule();
+      });
+      card.append(details, remove);
+      scheduleList.append(card);
+    });
+  }
+
+  document.querySelectorAll('[data-open-schedule]:not(#schedule-lecture-link)').forEach(function (button) {
+    button.addEventListener('click', function () {
+      scheduleForm.reset();
+      scheduleDate.value = localDateValue();
+      scheduleFeedback.textContent = '';
+      scheduleDialog.showModal();
+    });
+  });
+  document.getElementById('teacher-schedule-close').addEventListener('click', function () { scheduleDialog.close(); });
+  document.getElementById('teacher-schedule-cancel').addEventListener('click', function () { scheduleDialog.close(); });
+  scheduleForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const sessions = readArray(scheduleKey);
+    sessions.push({
+      id: crypto.randomUUID(),
+      title: document.getElementById('teacher-schedule-title').value.trim(),
+      date: scheduleDate.value,
+      time: document.getElementById('teacher-schedule-time').value,
+      location: document.getElementById('teacher-schedule-location').value.trim()
+    });
+    localStorage.setItem(scheduleKey, JSON.stringify(sessions));
+    renderSchedule();
+    scheduleDialog.close();
+  });
+  renderSchedule();
+
+  function readReviews() {
+    try { return JSON.parse(localStorage.getItem(reviewStorageKey) || '{}'); } catch { return {}; }
+  }
+  document.querySelectorAll('[data-review-student]').forEach(function (button) {
+    const key = `${button.dataset.reviewStudent}::${button.dataset.reviewAssignment}`;
+    button.dataset.reviewKey = key;
+    if (readReviews()[key]) button.textContent = 'Reviewed';
+    button.addEventListener('click', function () {
+      activeReviewButton = button;
+      document.getElementById('teacher-review-heading').textContent = `Review ${button.dataset.reviewAssignment}`;
+      document.getElementById('teacher-review-detail').textContent = `Student: ${button.dataset.reviewStudent}`;
+      reviewNote.value = readReviews()[key]?.note || '';
+      reviewFeedback.textContent = '';
+      reviewDialog.showModal();
+    });
+  });
+  document.getElementById('teacher-review-close').addEventListener('click', function () { reviewDialog.close(); });
+  document.getElementById('teacher-review-cancel').addEventListener('click', function () { reviewDialog.close(); });
+  reviewForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const reviews = readReviews();
+    reviews[activeReviewButton.dataset.reviewKey] = {
+      student: activeReviewButton.dataset.reviewStudent,
+      assignment: activeReviewButton.dataset.reviewAssignment,
+      note: reviewNote.value.trim(),
+      reviewedAt: new Date().toISOString()
+    };
+    localStorage.setItem(reviewStorageKey, JSON.stringify(reviews));
+    activeReviewButton.textContent = 'Reviewed';
+    reviewFeedback.textContent = 'Review notes saved in this browser.';
+    reviewDialog.close();
+  });
+
+  function updateNotificationSummary() {
+    const assignmentCount = Number(document.getElementById('teacher-assignment-count').textContent) || 0;
+    const riskCount = Number(document.getElementById('teacher-risk-count').textContent) || 0;
+    notificationSummary.textContent = assignmentCount || riskCount
+      ? `${assignmentCount} assignment${assignmentCount === 1 ? '' : 's'} and ${riskCount} learner${riskCount === 1 ? '' : 's'} needing support.`
+      : 'You are all caught up.';
+  }
+  function closeNotifications() {
+    notificationPanel.classList.add('hidden');
+    notificationToggle.setAttribute('aria-expanded', 'false');
+  }
+  notificationToggle.addEventListener('click', function () {
+    const opening = notificationToggle.getAttribute('aria-expanded') !== 'true';
+    notificationPanel.classList.toggle('hidden', !opening);
+    notificationToggle.setAttribute('aria-expanded', String(opening));
+    if (opening) {
+      updateNotificationSummary();
+      notificationDot.classList.add('hidden');
+    }
+  });
+  document.getElementById('teacher-notifications-close').addEventListener('click', closeNotifications);
+  document.addEventListener('click', function (event) {
+    if (!notificationToggle.parentElement.contains(event.target)) closeNotifications();
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') closeNotifications();
+  });
+});
+</script>
+</body>
+</html>

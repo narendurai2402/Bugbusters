@@ -102,22 +102,365 @@ const DSA_QUESTIONS: QuestionDef[] = [
       "Explanation: O(log n) grows much more slowly than O(n); repeated halving is smaller than checking each element."] },
 ];
 
-export const QUESTIONS: QuestionDef[] = [...MATH_QUESTIONS, ...DSA_QUESTIONS];
+const SCIENCE_QUESTIONS: QuestionDef[] = [
+  {
+    "id": "s1",
+    "category": "Science",
+    "concept": "Gravity and falling",
+    "text": "In a vacuum, which hits the ground first: a 1 kg ball or a 10 kg ball dropped together?",
+    "answers": [
+      "neither",
+      "same",
+      "both",
+      "at the same time",
+      "together",
+      "they land together"
+    ],
+    "wrong": {
+      "10 kg": [
+        "Heavier objects fall faster",
+        0.85
+      ],
+      "10kg ball": [
+        "Heavier objects fall faster",
+        0.85
+      ],
+      "the 10 kg ball": [
+        "Heavier objects fall faster",
+        0.85
+      ]
+    },
+    "recovery": {
+      "text": "In a vacuum, which hits first: a 2 kg rock or a 5 kg rock dropped together?",
+      "answers": [
+        "neither",
+        "same",
+        "both",
+        "at the same time",
+        "together"
+      ],
+      "wrong": "5 kg"
+    },
+    "ladder": [
+      "What is pulling both balls down, and does that pull depend on how heavy the ball is?",
+      "Hint: a heavier ball has more gravity pulling on it, but it also has more mass to move. What happens to the acceleration?",
+      "Explanation: with no air, all objects accelerate at the same rate (about 9.8 m/s2), so both land together."
+    ]
+  },
+  {
+    "id": "s2",
+    "category": "Science",
+    "concept": "Seasons",
+    "text": "What mainly causes the seasons on Earth?",
+    "answers": [
+      "tilt",
+      "axial tilt",
+      "earth's tilt",
+      "the tilt of earth's axis",
+      "axis tilt",
+      "tilt of the axis"
+    ],
+    "wrong": {
+      "distance from the sun": [
+        "Seasons come from distance to the Sun",
+        0.83
+      ],
+      "distance": [
+        "Seasons come from distance to the Sun",
+        0.83
+      ],
+      "closer to the sun": [
+        "Seasons come from distance to the Sun",
+        0.83
+      ]
+    },
+    "recovery": {
+      "text": "When it is summer in Canada, is it winter in Australia? (yes/no)",
+      "answers": [
+        "yes"
+      ],
+      "wrong": "no"
+    },
+    "ladder": [
+      "If distance caused seasons, would both hemispheres have summer at the same time?",
+      "Hint: Earth's axis is tilted about 23.5 degrees. What does that change about how sunlight hits each hemisphere?",
+      "Explanation: the tilt makes one hemisphere receive more direct sunlight for longer days, so seasons are opposite in the two hemispheres."
+    ]
+  },
+  {
+    "id": "s3",
+    "category": "Science",
+    "concept": "Conservation of mass",
+    "text": "When ice melts into water, does its mass increase, decrease, or stay the same?",
+    "answers": [
+      "stay the same",
+      "stays the same",
+      "same",
+      "unchanged",
+      "stays same"
+    ],
+    "wrong": {
+      "decrease": [
+        "Thinks matter disappears in a change of state",
+        0.78
+      ],
+      "decreases": [
+        "Thinks matter disappears in a change of state",
+        0.78
+      ],
+      "increase": [
+        "Thinks matter appears in a change of state",
+        0.7
+      ]
+    },
+    "recovery": {
+      "text": "Water boils in a sealed pot. Does the total mass increase, decrease, or stay the same?",
+      "answers": [
+        "stay the same",
+        "stays the same",
+        "same",
+        "unchanged"
+      ],
+      "wrong": "decrease"
+    },
+    "ladder": [
+      "Where do the particles of ice go when it melts?",
+      "Hint: melting changes how the particles are arranged, not how many there are.",
+      "Explanation: a change of state does not add or remove matter, so the mass stays the same."
+    ]
+  },
+  {
+    "id": "s4",
+    "category": "Science",
+    "concept": "Force and motion",
+    "text": "A ball rolls across a frictionless floor. Is a continuous push needed to keep it moving? (yes/no)",
+    "answers": [
+      "no"
+    ],
+    "wrong": {
+      "yes": [
+        "Believes motion needs a constant force",
+        0.84
+      ]
+    },
+    "recovery": {
+      "text": "A puck slides on frictionless ice. Is a force needed to keep it moving at the same speed? (yes/no)",
+      "answers": [
+        "no"
+      ],
+      "wrong": "yes"
+    },
+    "ladder": [
+      "What does a moving object do if nothing pushes or pulls it?",
+      "Hint: Newton's first law says an object keeps its velocity unless a net force acts on it.",
+      "Explanation: force changes motion, it is not needed to maintain it. Without friction the ball keeps rolling."
+    ]
+  },
+  {
+    "id": "s5",
+    "category": "Science",
+    "concept": "Electric current",
+    "text": "In a simple circuit, is current 'used up' by the bulb? (yes/no)",
+    "answers": [
+      "no"
+    ],
+    "wrong": {
+      "yes": [
+        "Thinks current is used up by components",
+        0.8
+      ]
+    },
+    "recovery": {
+      "text": "In a series circuit, is the current the same before and after the bulb? (yes/no)",
+      "answers": [
+        "yes"
+      ],
+      "wrong": "no"
+    },
+    "ladder": [
+      "If current were used up, what would happen to the charge that flows into the bulb?",
+      "Hint: charge is conserved. The bulb transfers energy, not charge.",
+      "Explanation: the same current flows back to the battery. What the bulb uses up is energy, not current."
+    ]
+  },
+  {
+    "id": "s6",
+    "category": "Science",
+    "concept": "Heat and temperature",
+    "text": "Which has the higher temperature: a bathtub of 40 C water or a cup of 60 C water?",
+    "answers": [
+      "cup",
+      "the cup",
+      "60",
+      "60 c",
+      "cup of water"
+    ],
+    "wrong": {
+      "bathtub": [
+        "Confuses total heat with temperature",
+        0.79
+      ],
+      "the bathtub": [
+        "Confuses total heat with temperature",
+        0.79
+      ],
+      "40": [
+        "Confuses total heat with temperature",
+        0.79
+      ]
+    },
+    "recovery": {
+      "text": "Which has the higher temperature: a lake at 15 C or a mug at 70 C?",
+      "answers": [
+        "mug",
+        "the mug",
+        "70",
+        "70 c"
+      ],
+      "wrong": "lake"
+    },
+    "ladder": [
+      "What does a thermometer reading tell you: how much heat there is in total, or how hot each particle is on average?",
+      "Hint: the bathtub holds more heat energy overall, but temperature is an average per particle.",
+      "Explanation: temperature does not depend on amount. The 60 C cup is hotter even though the bathtub holds more total heat."
+    ]
+  },
+  {
+    "id": "s7",
+    "category": "Science",
+    "concept": "Plant growth",
+    "text": "Where do plants get most of the mass they use to build their bodies?",
+    "answers": [
+      "air",
+      "the air",
+      "carbon dioxide",
+      "co2"
+    ],
+    "wrong": {
+      "soil": [
+        "Thinks plant mass comes from soil",
+        0.82
+      ],
+      "the soil": [
+        "Thinks plant mass comes from soil",
+        0.82
+      ],
+      "dirt": [
+        "Thinks plant mass comes from soil",
+        0.82
+      ],
+      "water": [
+        "Thinks plant mass comes from soil or water only",
+        0.7
+      ]
+    },
+    "recovery": {
+      "text": "Which gas do plants take in from the air to make sugar?",
+      "answers": [
+        "carbon dioxide",
+        "co2"
+      ],
+      "wrong": "oxygen"
+    },
+    "ladder": [
+      "A tree grows huge but the soil around it barely shrinks. What does that tell you?",
+      "Hint: plants build sugar from carbon dioxide and water using light.",
+      "Explanation: most plant mass is carbon that comes from CO2 in the air through photosynthesis, not from the soil."
+    ]
+  },
+  {
+    "id": "s8",
+    "category": "Science",
+    "concept": "Moon phases",
+    "text": "Are the phases of the Moon caused by Earth's shadow falling on it? (yes/no)",
+    "answers": [
+      "no"
+    ],
+    "wrong": {
+      "yes": [
+        "Thinks Earth's shadow causes Moon phases",
+        0.83
+      ]
+    },
+    "recovery": {
+      "text": "Is a lunar eclipse the same thing as a normal Moon phase? (yes/no)",
+      "answers": [
+        "no"
+      ],
+      "wrong": "yes"
+    },
+    "ladder": [
+      "Can you see a crescent Moon when the Moon is in Earth's shadow?",
+      "Hint: half of the Moon is always lit by the Sun. Phases depend on how much of that lit half we can see.",
+      "Explanation: phases come from the Moon's orbit changing our viewing angle of its lit half. Earth's shadow only causes eclipses."
+    ]
+  },
+];
+
+const PYTHON_QUESTIONS: QuestionDef[] = [
+  { id: "p1", category: "Python", concept: "Python functions", text: "Which keyword starts a function definition in Python?", answers: ["def"],
+    wrong: { "function": ["Confuses Python syntax with other languages", 0.82] },
+    recovery: { text: "Which keyword starts a class definition in Python?", answers: ["class"], wrong: "def" },
+    ladder: ["Look at the first word in a Python function declaration.", "Hint: the keyword is short and comes before the function name.", "Explanation: Python uses `def` to define a function."] },
+  { id: "p2", category: "Python", concept: "Python lists", text: "What is the result of len([4, 7, 9])?", answers: ["3"],
+    wrong: { "2": ["Confuses the last index with the number of items", 0.8] },
+    recovery: { text: "How many items are in [\"a\", \"b\"]?", answers: ["2"], wrong: "1" },
+    ladder: ["Count each value in the list.", "Hint: `len` counts items, not the index of the last item.", "Explanation: the list contains three items, so `len([4, 7, 9])` is 3."] },
+  { id: "p3", category: "Python", concept: "Python list methods", text: "Which list method adds an item to the end of a Python list?", answers: ["append"],
+    wrong: { "add": ["Assumes Python lists use a generic add method", 0.78] },
+    recovery: { text: "Which list method removes and returns the last item?", answers: ["pop"], wrong: "append" },
+    ladder: ["Think of the method used like `items.<method>(value)`.", "Hint: it means to attach another item at the end.", "Explanation: `append(value)` adds a value to the end of a Python list."] },
+];
+
+const JAVA_QUESTIONS: QuestionDef[] = [
+  { id: "j1", category: "Java", concept: "Java entry point", text: "What is the name of the standard Java application entry-point method?", answers: ["main"],
+    wrong: { "start": ["Confuses the entry point with a descriptive label", 0.8] },
+    recovery: { text: "What is the name of the Java method that commonly prints a line to the console?", answers: ["println", "print"], wrong: "main" },
+    ladder: ["Recall the method declared inside `public static void ...`.", "Hint: it is the short name used by the Java launcher.", "Explanation: Java starts a standard application by calling its `main` method."] },
+  { id: "j2", category: "Java", concept: "Java primitive types", text: "Which Java primitive type is commonly used to store a whole number?", answers: ["int"],
+    wrong: { "integer": ["Confuses the primitive type with its wrapper class", 0.82] },
+    recovery: { text: "Which Java primitive type stores a true-or-false value?", answers: ["boolean"], wrong: "int" },
+    ladder: ["Choose the short primitive type, not a class name.", "Hint: it is also used in declarations such as `int count = 3;`.", "Explanation: `int` is Java's primitive type for whole numbers."] },
+  { id: "j3", category: "Java", concept: "Java object creation", text: "Which Java keyword creates a new object from a class?", answers: ["new"],
+    wrong: { "create": ["Uses an English verb instead of Java syntax", 0.78] },
+    recovery: { text: "Which keyword declares a class in Java?", answers: ["class"], wrong: "new" },
+    ladder: ["Look at the keyword before a constructor call.", "Hint: object creation looks like `new TypeName()`.", "Explanation: Java uses the `new` keyword to create an object."] },
+];
+
+// 1 = easy, 2 = medium, 3 = hard (mirrors DIFFICULTY in backend/questions.py)
+const DIFFICULTY: Record<string, 1 | 2 | 3> = {
+  q1: 2, q2: 1, q3: 1, q4: 2, q5: 1, q6: 1, q7: 3, q8: 1,
+  d1: 2, d2: 1, d3: 2, d4: 2, d5: 1, d6: 2, d7: 3, d8: 1,
+  s1: 2, s2: 2, s3: 2, s4: 3, s5: 3, s6: 3, s7: 2, s8: 1,
+  p1: 1, p2: 1, p3: 2,
+  j1: 1, j2: 1, j3: 2,
+};
+
+export const QUESTIONS: QuestionDef[] = [...MATH_QUESTIONS, ...DSA_QUESTIONS, ...SCIENCE_QUESTIONS, ...PYTHON_QUESTIONS, ...JAVA_QUESTIONS].map((q) => ({
+  ...q,
+  difficulty: DIFFICULTY[q.id] ?? 2,
+}));
 export const CONCEPTS = QUESTIONS.map((q) => q.concept);
 
+export const CATEGORIES: PracticeCategory[] = ["Math", "DSA", "Science", "Python", "Java"];
+
 export const QUESTION_BANKS: Record<PracticeCategory, QuestionDef[]> = {
-  Math: MATH_QUESTIONS,
-  DSA: DSA_QUESTIONS,
+  Math: QUESTIONS.filter((q) => q.category === "Math"),
+  DSA: QUESTIONS.filter((q) => q.category === "DSA"),
+  Science: QUESTIONS.filter((q) => q.category === "Science"),
+  Python: QUESTIONS.filter((q) => q.category === "Python"),
+  Java: QUESTIONS.filter((q) => q.category === "Java"),
 };
+
+/** concept name -> subject, e.g. "Stack" -> "DSA" */
+export const SUBJECT_OF: Record<string, PracticeCategory> = Object.fromEntries(
+  QUESTIONS.map((q) => [q.concept, q.category])
+);
 
 export function getQuestionsByCategory(category: PracticeCategory = "Math") {
   return QUESTION_BANKS[category];
 }
 
-export const STUDENTS = ["Aarav","Divya","Karthik","Meena","Ravi","Sneha","Arjun","Lakshmi","Vikram","Nisha","Suresh","Priya"]
-  .map((name, i) => ({ name, mastery: CONCEPTS.map((_, j) => Math.max(0.1, Math.min(0.95, 0.25 + ((i * 37 + j * 53) % 60) / 100))) }));
+export const STUDENTS: { name: string; mastery: number[] }[] = [];
 
-export const TOP_MISCONCEPTIONS: [string, number][] = [
-  ["Adds tops and bottoms", 14], ["Bigger denominator means bigger fraction", 9],
-  ["Divides only the numerator", 6], ["Cross-multiplies when adding", 3],
-];
+export const TOP_MISCONCEPTIONS: [string, number][] = [];

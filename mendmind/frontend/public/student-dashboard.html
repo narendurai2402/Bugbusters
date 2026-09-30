@@ -1,0 +1,870 @@
+<!DOCTYPE html><html lang="en" style="overflow-x: clip"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Reason X - Student Dashboard</title>
+<!-- Tailwind CSS CDN with forms & container queries plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter / Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            surface: {
+              bg: '#f8fafc',
+              sidebar: '#ffffff',
+              card: '#ffffff'
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom styles for subtle UI refinements -->
+<style data-purpose="custom-scroll-and-gradients">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f6f8fc;
+    }
+    /* Custom hero card gradient resembling the reference */
+    .hero-banner-gradient {
+      background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 50%, #ede9fe 100%);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col bg-[#F5F7FB]" style="overflow-x: clip">
+<!-- BEGIN: Application Shell Container -->
+<div class="flex flex-1 min-h-screen w-full flex-col lg:flex-row">
+<!-- BEGIN: LeftSidebar -->
+<aside class="w-full bg-white border-b border-slate-200/80 flex flex-col justify-between py-6 px-4 shrink-0 lg:w-64 lg:border-b-0 lg:border-r">
+<!-- Top Section: Brand & Navigation -->
+<div class="flex flex-col gap-8">
+<!-- Logo -->
+<div class="flex items-center gap-2.5 px-3">
+<span class="text-2xl font-extrabold tracking-tight text-slate-900">Reason</span>
+<span class="text-2xl font-extrabold text-indigo-600">X</span>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col space-y-1">
+<!-- Active Item: Dashboard -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl bg-indigo-50/80 text-indigo-600 font-semibold text-sm transition-colors border-l-4 border-indigo-600" href="student-dashboard.html">
+<svg class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+<path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+</svg>
+<span>Dashboard</span>
+</a>
+<!-- My Learning -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors" href="student-tools.html?view=learning">
+<svg class="w-5 h-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>My Learning</span>
+</a>
+<!-- AI Tutor -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors" href="ai-tutor.html">
+<svg class="w-5 h-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.523a8.25 8.25 0 01-5.46 0l-1.57-.523m8.6 0a2.25 2.25 0 011.4 2.1v.6a2.25 2.25 0 01-2.25 2.25H4.25A2.25 2.25 0 012 18v-.6a2.25 2.25 0 011.4-2.1" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>AI Tutor</span>
+</a>
+<!-- Practice -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors" href="student-tools.html?view=practice">
+<svg class="w-5 h-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Practice</span>
+</a>
+<!-- Quizzes -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors" href="student-tools.html?view=quizzes">
+<svg class="w-5 h-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Quizzes</span>
+</a>
+<!-- Progress -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors" href="student-tools.html?view=progress">
+<svg class="w-5 h-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Progress</span>
+</a>
+<!-- Notes -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors" href="student-tools.html?view=notes">
+<svg class="w-5 h-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Notes</span>
+</a>
+<!-- Projects -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors" href="student-tools.html?view=projects">
+<svg class="w-5 h-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M4 7.5A2.5 2.5 0 016.5 5h3l1.5 2h6A2.5 2.5 0 0119.5 9.5v7A2.5 2.5 0 0117 19H6.5A2.5 2.5 0 014 16.5v-9z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Projects</span>
+</a>
+<!-- Calendar -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors" href="student-tools.html?view=calendar">
+<svg class="w-5 h-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Calendar</span>
+</a>
+</nav>
+</div>
+<!-- Bottom Settings & Logout Section -->
+<div class="flex flex-col space-y-1 pt-6 border-t border-slate-100">
+<!-- Settings -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors" href="student-tools.html?view=settings">
+<svg class="w-5 h-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Settings</span>
+</a>
+<!-- Help & Support -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium text-sm transition-colors" href="index.html#contact">
+<svg class="w-5 h-5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Help &amp; Support</span>
+</a>
+<!-- Log Out -->
+<a class="flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-rose-500 hover:bg-rose-50 font-semibold text-sm transition-colors mt-2" href="login.html">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Log Out</span>
+</a>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContentWrapper -->
+<div class="flex-1 flex flex-col min-w-0">
+<!-- BEGIN: TopHeader -->
+<header class="h-20 bg-transparent px-8 flex items-center justify-between gap-6 shrink-0">
+<!-- Global Search Bar -->
+<form id="dashboardSearchForm" class="relative flex-1 max-w-xl">
+<span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<input id="dashboardSearch" aria-controls="dashboardSearchResults" aria-expanded="false" autocomplete="off" class="w-full pl-11 pr-4 py-2.5 text-sm bg-white border border-slate-200/90 rounded-2xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 shadow-sm transition" placeholder="Search for subjects, topics, or questions..." type="search">
+<div id="dashboardSearchResults" class="absolute left-0 right-0 top-full z-40 mt-2 hidden overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl" role="listbox"></div>
+</form>
+<!-- Right User Actions -->
+<div class="flex items-center gap-5">
+<!-- Notification Bell -->
+<div class="relative">
+<button id="notificationsToggle" aria-label="Notifications" aria-expanded="false" aria-controls="notificationsPanel" class="relative p-2.5 rounded-full text-slate-500 hover:text-slate-800 hover:bg-white transition shadow-sm" type="button">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<!-- Badge dot -->
+<span class="absolute top-2 right-2.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white"></span>
+</button>
+<div id="notificationsPanel" class="absolute right-0 top-full z-40 mt-2 hidden w-72 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl">
+<div class="flex items-center justify-between"><h2 class="text-sm font-bold text-slate-900">Notifications</h2><button id="notificationsClose" type="button" aria-label="Close notifications" class="rounded-lg px-2 py-1 text-slate-500 hover:bg-slate-100">×</button></div>
+<p class="mt-3 text-sm text-slate-600">You are all caught up.</p>
+<div class="mt-3 flex gap-3 border-t border-slate-100 pt-3 text-xs font-semibold"><a class="text-indigo-600 hover:text-indigo-800" href="student-tools.html?view=progress">View progress</a><a class="text-indigo-600 hover:text-indigo-800" href="student-tools.html?view=notes">Open notes</a></div>
+</div>
+</div>
+<!-- User Profile Pill -->
+<a href="student-tools.html?view=settings" aria-label="Open profile settings" class="flex items-center gap-3 pl-2 pr-1 py-1 bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:border-slate-300 transition">
+<div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+              S
+            </div>
+<div class="flex flex-col text-left leading-tight pr-1">
+<span id="studentNameHeader" class="text-sm font-bold text-slate-900">Student</span>
+<span class="text-[11px] font-medium text-slate-400">Student</span>
+</div>
+<svg class="w-4 h-4 text-slate-400 ml-1 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</div>
+</header>
+<!-- END: TopHeader -->
+<!-- BEGIN: DashboardBodyContent -->
+<main class="flex-1 px-8 pb-10 grid grid-cols-12 gap-8 items-start">
+<!-- Left / Main Working Area (8 cols on xl) -->
+<div class="col-span-12 xl:col-span-8 flex flex-col gap-6">
+<!-- BEGIN: WelcomeBanner -->
+<div class="relative overflow-hidden rounded-3xl hero-banner-gradient p-8 lg:p-9 border border-indigo-100 shadow-sm flex items-center justify-between min-h-[230px]">
+<!-- Decorative Background Elements -->
+<div class="absolute -top-12 -right-12 w-48 h-48 bg-indigo-200/40 rounded-full blur-2xl pointer-events-none"></div>
+<!-- Left Text Content -->
+<div class="relative z-10 max-w-md">
+<h1 class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+<span>Welcome Back,</span>
+</h1>
+<h2 class="text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2 mt-0.5">
+<span id="studentNameWelcome">Student!</span>
+<span class="text-2xl animate-pulse">👋</span>
+</h2>
+<p class="text-slate-600 text-sm mt-3 font-medium leading-relaxed">
+                Continue your learning journey with your personal AI assistant.
+              </p>
+<div class="mt-6">
+<a href="student-tools.html?view=learning" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-600/20 transition-all hover:translate-x-0.5">
+<span>Start Learning</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</div>
+</div>
+<!-- Right Visual 3D Robot Illustration Placeholder (High-Fidelity SVG Graphic) -->
+<div class="hidden sm:flex relative z-10 shrink-0 w-64 h-48 items-center justify-center">
+<!-- Rendered SVG composition matching the cute 3D robot reading with code, bulb, and cap badges -->
+<svg class="w-full h-full" fill="none" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg">
+<!-- Floating code badge -->
+<g filter="drop-shadow(0 10px 15px rgba(99,102,241,0.15))">
+<rect fill="white" height="46" rx="14" transform="rotate(-12 48 68)" width="46" x="25" y="45"></rect>
+<path d="M40 64L35 69L40 74" stroke="#4F46E5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<path d="M45 74L50 69L45 64" stroke="#4F46E5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<path d="M44 63L41 75" stroke="#4F46E5" stroke-linecap="round" stroke-width="2"></path>
+</g>
+<!-- Floating Idea bulb badge -->
+<g filter="drop-shadow(0 8px 12px rgba(245,158,11,0.15))">
+<rect fill="white" height="36" rx="12" width="36" x="75" y="10"></rect>
+<circle cx="93" cy="25" fill="#FBBF24" r="7"></circle>
+<path d="M91 32h4" stroke="#D97706" stroke-linecap="round" stroke-width="2"></path>
+</g>
+<!-- Floating Grad Cap badge -->
+<g filter="drop-shadow(0 8px 12px rgba(99,102,241,0.2))">
+<rect fill="#6366F1" height="40" rx="12" width="40" x="195" y="40"></rect>
+<path d="M215 54l-11 5 11 5 11-5-11-5z" fill="white"></path>
+<path d="M208 61.5v5c0 2 3.1 3.5 7 3.5s7-1.5 7-3.5v-5" stroke="white" stroke-width="1.5"></path>
+<path d="M224 59v6" stroke="#C7D2FE" stroke-width="1.5"></path>
+</g>
+<!-- Floating Chart badge -->
+<g filter="drop-shadow(0 6px 10px rgba(0,0,0,0.06))">
+<rect fill="white" height="32" rx="10" width="32" x="190" y="95"></rect>
+<rect fill="#818CF8" height="7" rx="1.5" width="3" x="197" y="112"></rect>
+<rect fill="#6366F1" height="12" rx="1.5" width="3" x="203" y="107"></rect>
+<rect fill="#4F46E5" height="16" rx="1.5" width="3" x="209" y="103"></rect>
+</g>
+<!-- Robot Mascot Head & Body -->
+<ellipse cx="145" cy="175" fill="#E0E7FF" rx="42" ry="12"></ellipse>
+<!-- Body -->
+<path d="M125 125C125 105 165 105 165 125V155C165 165 125 165 125 155V125Z" fill="#F8FAFC"></path>
+<!-- Antenna -->
+<rect fill="#CBD5E1" height="10" rx="2" width="4" x="143" y="42"></rect>
+<circle cx="145" cy="40" fill="#3B82F6" r="5"></circle>
+<!-- Head -->
+<rect fill="#FFFFFF" height="54" rx="22" stroke="#E2E8F0" stroke-width="2" width="70" x="110" y="52"></rect>
+<rect fill="#0F172A" height="42" rx="16" width="54" x="118" y="58"></rect>
+<!-- Happy Eyes -->
+<path d="M128 77C128 72 136 72 136 77" stroke="#38BDF8" stroke-linecap="round" stroke-width="3"></path>
+<path d="M154 77C154 72 162 72 162 77" stroke="#38BDF8" stroke-linecap="round" stroke-width="3"></path>
+<!-- Ears/Headphones -->
+<rect fill="#3B82F6" height="22" rx="3.5" width="7" x="104" y="68"></rect>
+<rect fill="#3B82F6" height="22" rx="3.5" width="7" x="179" y="68"></rect>
+<!-- Arms holding book -->
+<circle cx="118" cy="138" fill="#3B82F6" r="10"></circle>
+<circle cx="172" cy="138" fill="#3B82F6" r="10"></circle>
+<!-- Open Book -->
+<path d="M120 135C132 133 143 140 145 145C147 140 158 133 170 135L172 165C160 162 148 168 145 170C142 168 130 162 118 165L120 135Z" fill="#6366F1"></path>
+<path d="M145 145V170" stroke="#4338CA" stroke-width="1.5"></path>
+</svg>
+</div>
+</div>
+<!-- END: WelcomeBanner -->
+<!-- BEGIN: QuickStatsRow -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<!-- Card 1: Courses Enrolled -->
+<div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-center gap-3.5 hover:shadow-md transition">
+<div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="min-w-0">
+<div id="coursesEnrolled" class="text-xl font-bold text-slate-900 leading-tight">0</div>
+<div class="text-xs text-slate-500 font-medium truncate mt-0.5">Courses Enrolled</div>
+</div>
+</div>
+<!-- Card 2: Questions Solved -->
+<div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-center gap-3.5 hover:shadow-md transition">
+<div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="min-w-0">
+<div id="questionsSolved" class="text-xl font-bold text-slate-900 leading-tight">0</div>
+<div class="text-xs text-slate-500 font-medium truncate mt-0.5">Questions Solved</div>
+</div>
+</div>
+<!-- Card 3: Learning Time -->
+<div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-center gap-3.5 hover:shadow-md transition">
+<div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center shrink-0">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="min-w-0">
+<div id="learningTime" class="text-xl font-bold text-slate-900 leading-tight">0 hrs</div>
+<div class="text-xs text-slate-500 font-medium truncate mt-0.5">Learning Time</div>
+</div>
+</div>
+<!-- Card 4: Average Score -->
+<div class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-center gap-3.5 hover:shadow-md transition">
+<div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
+<svg class="w-6 h-6 fill-amber-400 stroke-amber-400" viewBox="0 0 24 24">
+<path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<div class="min-w-0">
+<div id="averageScore" class="text-xl font-bold text-slate-900 leading-tight">0%</div>
+<div class="text-xs text-slate-500 font-medium truncate mt-0.5">Average Score</div>
+</div>
+</div>
+</div>
+<!-- END: QuickStatsRow -->
+<!-- BEGIN: ContinueLearningSection -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-base font-bold text-slate-900">Continue Learning</h3>
+<a class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition" href="student-tools.html?view=learning">
+                View All <span aria-hidden="true">›</span>
+</a>
+</div>
+<!-- Course Card: Data Structures and Algorithms -->
+<div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5 hover:border-slate-300 transition">
+<div class="flex items-center gap-4">
+<!-- Course 3D Graphic representation -->
+<div class="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-inner">
+<svg class="w-9 h-9 text-white" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+<circle cx="12" cy="5" fill="currentColor" r="2.5"></circle>
+<circle cx="6" cy="18" fill="currentColor" r="2.5"></circle>
+<circle cx="18" cy="18" fill="currentColor" r="2.5"></circle>
+<path d="M12 7.5v4m0 0L7.5 16m4.5-4.5L16.5 16" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<!-- Course Details -->
+<div class="space-y-1">
+<h4 class="font-bold text-slate-900 text-sm">Data Structures and Algorithms</h4>
+<p class="text-xs text-slate-500 font-normal">
+                    Arrays <span class="mx-1">•</span> Linked Lists <span class="mx-1">•</span> Stacks <span class="mx-1">•</span> Queues
+                  </p>
+<!-- Progress Bar and Percentage -->
+<div class="flex items-center gap-3 pt-2">
+<div class="w-48 bg-slate-100 rounded-full h-2 overflow-hidden">
+<div class="bg-indigo-600 h-2 rounded-full" style="width: 60%"></div>
+</div>
+<span class="text-xs font-semibold text-slate-500">60%</span>
+</div>
+</div>
+</div>
+<!-- Continue Button -->
+<div class="shrink-0 flex justify-end">
+<a href="ai-tutor.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-sm shadow-indigo-600/20 transition-all hover:translate-x-0.5">
+<span>Continue</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</div>
+</div>
+</div>
+<!-- END: ContinueLearningSection -->
+<!-- BEGIN: RecommendedForYouSection -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-base font-bold text-slate-900">Recommended for You</h3>
+<a class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition" href="student-tools.html?view=learning">
+                View All
+              </a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Python for Beginners -->
+<a href="student-tools.html?view=learning" aria-label="Open Python for Beginners" class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-center justify-between gap-3 hover:shadow-md transition">
+<div class="flex items-center gap-3">
+<!-- Python Logo Icon -->
+<div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
+<svg class="w-6 h-6" viewBox="0 0 128 128">
+<path d="M63.5 8c-26 0-24.3 11.3-24.3 11.3l.1 11.7h24.8v3.5H30.5S17 33 17 59.2c0 26.2 11.8 25.3 11.8 25.3h7V74.2s-.4-12.2 12-12.2h20.7s11.5-.2 11.5-11.3V19.3S81.2 8 63.5 8zM50.4 15.3c2.6 0 4.6 2.1 4.6 4.6s-2.1 4.6-4.6 4.6-4.6-2.1-4.6-4.6 2.1-4.6 4.6-4.6z" fill="#387EB8"></path>
+<path d="M64.5 120c26 0 24.3-11.3 24.3-11.3l-.1-11.7H63.9v-3.5h33.6s13.5 1.5 13.5-24.7c0-26.2-11.8-25.3-11.8-25.3h-7v10.3s.4 12.2-12 12.2H49.5s-11.5.2-11.5 11.3v21.4S46.8 120 64.5 120zm13.1-7.3c-2.6 0-4.6-2.1-4.6-4.6s2.1-4.6 4.6-4.6 4.6 2.1 4.6 4.6-2.1 4.6-4.6 4.6z" fill="#FFE052"></path>
+</svg>
+</div>
+<div>
+<h5 class="text-xs font-bold text-slate-800 leading-snug">Python for Beginners</h5>
+<p class="text-[11px] text-slate-400 font-medium">12 Lessons</p>
+</div>
+</div>
+<!-- Mini Stats indicator -->
+<div class="flex items-end gap-0.5 h-4">
+<span class="w-1 bg-indigo-200 h-2 rounded-t-sm"></span>
+<span class="w-1 bg-indigo-300 h-3 rounded-t-sm"></span>
+<span class="w-1 bg-indigo-600 h-4 rounded-t-sm"></span>
+</div>
+</a>
+<!-- Java Programming -->
+<a href="student-tools.html?view=learning" aria-label="Open Java Programming" class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-center justify-between gap-3 hover:shadow-md transition">
+<div class="flex items-center gap-3">
+<!-- Java Cup Icon -->
+<div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
+<svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+<path d="M4 19h14a1 1 0 0 0 1-1v-2H3v2a1 1 0 0 0 1 1zm16-8h-1V9a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h16a3 3 0 0 0 3-3v-1a1 1 0 0 0-2-1zm0 2a1 1 0 0 1-1 1h-1v-2h1a1 1 0 0 1 1 1zm-8-7a2 2 0 0 0-2-2 1 1 0 0 0 0 2 2 2 0 0 1 2 2 1 1 0 0 0 2 0 2 2 0 0 0-2-2z"></path>
+</svg>
+</div>
+<div>
+<h5 class="text-xs font-bold text-slate-800 leading-snug">Java Programming</h5>
+<p class="text-[11px] text-slate-400 font-medium">18 Lessons</p>
+</div>
+</div>
+<!-- Mini Stats indicator -->
+<div class="flex items-end gap-0.5 h-4">
+<span class="w-1 bg-indigo-200 h-1.5 rounded-t-sm"></span>
+<span class="w-1 bg-indigo-400 h-2.5 rounded-t-sm"></span>
+<span class="w-1 bg-indigo-600 h-4 rounded-t-sm"></span>
+</div>
+</a>
+<!-- Cloud Computing Basics -->
+<a href="student-tools.html?view=learning" aria-label="Open Cloud Computing Basics" class="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-sm flex items-center justify-between gap-3 hover:shadow-md transition">
+<div class="flex items-center gap-3">
+<!-- Cloud Icon -->
+<div class="w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center shrink-0">
+<svg class="w-6 h-6 text-sky-500" fill="currentColor" viewBox="0 0 24 24">
+<path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"></path>
+</svg>
+</a>
+<div>
+<h5 class="text-xs font-bold text-slate-800 leading-snug">Cloud Computing Basics</h5>
+<p class="text-[11px] text-slate-400 font-medium">15 Lessons</p>
+</div>
+</div>
+<!-- Mini Stats indicator -->
+<div class="flex items-end gap-0.5 h-4">
+<span class="w-1 bg-indigo-200 h-2 rounded-t-sm"></span>
+<span class="w-1 bg-indigo-300 h-3 rounded-t-sm"></span>
+<span class="w-1 bg-indigo-600 h-4 rounded-t-sm"></span>
+</div>
+</div>
+</div>
+</div>
+<!-- END: RecommendedForYouSection -->
+</div>
+<!-- End of Left Working Area -->
+<!-- BEGIN: RightSidebarContent (4 cols on xl) -->
+<div class="col-span-12 xl:col-span-4 flex flex-col gap-6">
+<!-- Card: Your Learning Goal -->
+<div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+<span class="p-1 rounded-lg bg-indigo-50 text-indigo-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<circle cx="12" cy="12" r="5"></circle>
+<circle cx="12" cy="12" fill="currentColor" r="1.5"></circle>
+</svg>
+</span>
+<span>Your Learning Goal</span>
+</div>
+<a href="student-tools.html?view=settings" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1 transition">
+<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Edit</span>
+</a>
+</div>
+<div>
+<p class="text-xs font-bold text-slate-800">Master Data Structures &amp; Algorithms</p>
+<div class="flex items-center justify-between gap-3 mt-3">
+<div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+<div class="bg-indigo-600 h-2 rounded-full" style="width: 60%"></div>
+</div>
+<span class="text-xs font-bold text-slate-600">60%</span>
+</div>
+</div>
+</div>
+<!-- Card: Learning Streak -->
+<a href="student-tools.html?view=progress" class="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-sm flex items-center justify-between hover:shadow-md transition">
+<div class="flex items-center gap-4">
+<!-- Flame Icon Badge -->
+<div class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center shrink-0">
+<svg class="w-6 h-6 text-orange-500 fill-orange-500" viewBox="0 0 24 24">
+<path d="M12.91 2.38a1 1 0 0 0-1.82 0C9.69 5.21 6.5 9.17 6.5 13.5a5.5 5.5 0 0 0 11 0c0-4.33-3.19-8.29-4.59-11.12zM12 17.5a3.5 3.5 0 0 1-3.5-3.5c0-1.8 1.14-3.8 2.38-5.32.44.82 1.12 1.82 1.12 3.32a2 2 0 0 0 2 2 1.5 1.5 0 0 1 1.5 1.5 3.5 3.5 0 0 1-3.5 2z"></path>
+</svg>
+</a>
+<div>
+<span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Learning Streak</span>
+<span class="text-lg font-extrabold text-slate-900 block leading-tight">12 Days</span>
+<span class="text-xs text-slate-500 font-medium">Keep it up! You're doing great!</span>
+</div>
+</div>
+<svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<path d="M8.25 4.5l7.5 7.5-7.5 7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<!-- Card: Today's Plan -->
+<div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+<span class="text-indigo-600">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+<path d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+<span>Today's Plan</span>
+</div>
+<a class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition" href="student-tools.html?view=calendar">
+                View All
+              </a>
+</div>
+<!-- Task List -->
+<div class="space-y-3 pt-1">
+<!-- Task 1: Completed -->
+<div class="flex items-center justify-between gap-3 text-xs">
+<label class="flex items-center gap-3 cursor-pointer select-none">
+<input checked="" data-plan-task="stack-module" class="w-4 h-4 rounded text-indigo-600 focus:ring-0 focus:ring-offset-0 border-slate-300" type="checkbox">
+<span class="text-slate-400 line-through font-medium">Complete Stack module</span>
+</label>
+<span class="text-[11px] font-semibold text-slate-400 shrink-0">09:00 AM</span>
+</div>
+<!-- Task 2 -->
+<div class="flex items-center justify-between gap-3 text-xs">
+<label class="flex items-center gap-3 cursor-pointer select-none">
+<input data-plan-task="practice-questions" class="w-4 h-4 rounded text-indigo-600 focus:ring-0 focus:ring-offset-0 border-slate-300" type="checkbox">
+<span class="text-slate-700 font-medium">Practice 10 questions</span>
+</label>
+<span class="text-[11px] font-semibold text-slate-400 shrink-0">11:00 AM</span>
+</div>
+<!-- Task 3 -->
+<div class="flex items-center justify-between gap-3 text-xs">
+<label class="flex items-center gap-3 cursor-pointer select-none">
+<input data-plan-task="ai-tutor-session" class="w-4 h-4 rounded text-indigo-600 focus:ring-0 focus:ring-offset-0 border-slate-300" type="checkbox">
+<span class="text-slate-700 font-medium">Watch AI Tutor session</span>
+</label>
+<span class="text-[11px] font-semibold text-slate-400 shrink-0">02:00 PM</span>
+</div>
+<!-- Task 4 -->
+<div class="flex items-center justify-between gap-3 text-xs">
+<label class="flex items-center gap-3 cursor-pointer select-none">
+<input data-plan-task="revise-notes" class="w-4 h-4 rounded text-indigo-600 focus:ring-0 focus:ring-offset-0 border-slate-300" type="checkbox">
+<span class="text-slate-700 font-medium">Revise notes</span>
+</label>
+<span class="text-[11px] font-semibold text-slate-400 shrink-0">05:00 PM</span>
+</div>
+</div>
+</div>
+<!-- Card: Motivational Quote Banner with Mountain & Flag -->
+<div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-50/70 via-purple-50/50 to-indigo-100/60 p-6 border border-indigo-100/70 shadow-sm flex flex-col justify-between min-h-[160px]">
+<!-- Quote Symbol & Text -->
+<div class="relative z-10 space-y-2 max-w-[210px]">
+<span class="text-indigo-400 text-3xl font-serif font-black leading-none block">“</span>
+<p class="text-xs font-bold text-slate-800 leading-snug">
+                "Small steps every day lead to big results."
+              </p>
+</div>
+<!-- Mountain Landscape Illustration Vector -->
+<div class="absolute right-0 bottom-0 w-44 h-36 pointer-events-none">
+<svg class="w-full h-full" fill="none" viewBox="0 0 170 140" xmlns="http://www.w3.org/2000/svg">
+<!-- Sun -->
+<circle cx="110" cy="45" fill="#FDE047" r="14"></circle>
+<!-- Background Mountain -->
+<polygon fill="#C7D2FE" points="40,140 100,60 160,140"></polygon>
+<!-- Foreground Main Mountain Peak -->
+<polygon fill="#6366F1" points="80,140 135,45 190,140"></polygon>
+<!-- Mountain Snow Cap -->
+<polygon fill="#EEF2FF" points="135,45 120,70 128,66 135,72 142,66 150,70"></polygon>
+<!-- Flag on Mountain Peak -->
+<line stroke="#312E81" stroke-width="2" x1="135" x2="135" y1="45" y2="28"></line>
+<path d="M135 28L155 35L135 42V28Z" fill="#4338CA"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- END: RightSidebarContent -->
+</main>
+<!-- END: DashboardBodyContent -->
+</div>
+<!-- END: MainContentWrapper -->
+</div>
+<!-- END: Application Shell Container -->
+
+<script id="reasonx-auth">
+(function () {
+  const PAGES = {
+    home: 'index.html',
+    signup: 'signup.html',
+    role: 'role-selection.html',
+    verify: 'email-verification.html',
+    login: 'login.html',
+    student: 'student-dashboard.html',
+    tutor: 'ai-tutor.html',
+    teacher: 'teacher-dashboard.html'
+  };
+
+  window.ReasonXAuth = {
+    getRole() { return localStorage.getItem('reasonXRole') || ''; },
+    isLoggedIn() { return localStorage.getItem('reasonXLoggedIn') === 'true'; },
+    setRole(role) {
+      if (role === 'student' || role === 'teacher') localStorage.setItem('reasonXRole', role);
+    },
+    login(role) {
+      this.setRole(role);
+      localStorage.setItem('reasonXLoggedIn', 'true');
+      localStorage.setItem('reasonXLoginAt', new Date().toISOString());
+    },
+    logout() {
+      localStorage.removeItem('reasonXLoggedIn');
+      localStorage.removeItem('reasonXLoginAt');
+      window.location.href = PAGES.login;
+    },
+    goByRole() {
+      const role = this.getRole();
+      if (!this.isLoggedIn()) { window.location.href = PAGES.login; return; }
+      window.location.href = role === 'teacher' ? PAGES.teacher : PAGES.student;
+    }
+  };
+
+  window.RX = window.ReasonXAuth;
+})();
+</script>
+
+<script>
+(function () {
+  if (!RX.isLoggedIn()) { window.location.replace('login.html'); return; }
+  if (RX.getRole() === 'teacher') { window.location.replace('teacher-dashboard.html'); return; }
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('a').forEach(function (a) {
+      const label = (a.textContent || '').trim().toLowerCase();
+      if (a.getAttribute('href') === '#') {
+        if (label.includes('dashboard')) a.href='student-dashboard.html';
+        else if (label.includes('ai tutor') || label.includes('tutor')) a.href='ai-tutor.html';
+      }
+      if (label.includes('log out') || label === 'logout' || label.includes('sign out')) {
+        a.href='login.html'; a.addEventListener('click', function(){ RX.logout(); });
+      }
+    });
+  });
+})();
+</script>
+<script>
+const API_BASE_URL = "http://localhost:8000";
+
+async function loadStudentDashboard() {
+    try {
+        // Get logged-in user from localStorage
+        const storedUser = localStorage.getItem("reasonXUser");
+
+        if (!storedUser) {
+            console.warn("No logged-in user found.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        const user = JSON.parse(storedUser);
+
+        // Make sure this is a student
+        if (user.role !== "student") {
+            console.warn("User is not a student.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        const studentEmail = user.email;
+
+        // -----------------------------
+        // Update student name
+        // -----------------------------
+        const firstName = user.name
+            ? user.name.split(" ")[0]
+            : "Student";
+
+        document.getElementById("studentNameHeader").textContent =
+            firstName;
+
+        document.getElementById("studentNameWelcome").textContent =
+            firstName + "!";
+
+        // -----------------------------
+        // Fetch analytics
+        // -----------------------------
+        const response = await fetch(
+            `${API_BASE_URL}/api/analytics/student/${encodeURIComponent(studentEmail)}`
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to load student analytics.");
+        }
+
+        const analytics = await response.json();
+
+        console.log("Student analytics:", analytics);
+
+        // -----------------------------
+        // Questions Solved
+        // -----------------------------
+        document.getElementById("questionsSolved").textContent =
+          analytics.questionsSolved ?? analytics.totalAttempts;
+
+        // -----------------------------
+        // Average Score
+        // -----------------------------
+        const accuracy = analytics.firstTryAccuracy;
+
+        document.getElementById("averageScore").textContent =
+            accuracy !== null
+                ? Math.round(accuracy * 100) + "%"
+                : "0%";
+
+        // -----------------------------
+        // Learning Time
+        // -----------------------------
+        // Your current backend does not provide
+        // learning time, so keep the existing value
+        // until that backend feature is added.
+        document.getElementById("learningTime").textContent =
+            "0 hrs";
+
+        // -----------------------------
+        // Courses Enrolled
+        // -----------------------------
+        // Your current backend does not have a
+        // student courses/enrollment endpoint yet.
+        document.getElementById("coursesEnrolled").textContent =
+            "0";
+
+    } catch (error) {
+        console.error("Dashboard loading error:", error);
+    }
+}
+
+// Run automatically when dashboard opens
+document.addEventListener("DOMContentLoaded", loadStudentDashboard);
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const searchForm = document.getElementById("dashboardSearchForm");
+  const searchInput = document.getElementById("dashboardSearch");
+  const searchResults = document.getElementById("dashboardSearchResults");
+  const searchItems = [
+    { label: "My Learning", description: "Courses and study tools", terms: "learning course subject tools", href: "student-tools.html?view=learning" },
+    { label: "Practice center", description: "Math, DSA, science, Python, and Java questions", terms: "practice math mathematics dsa science python java programming question topic", href: "student-tools.html?view=practice" },
+    { label: "Quizzes", description: "Quick checks and concept reviews", terms: "quiz quizzes test review challenge", href: "student-tools.html?view=quizzes" },
+    { label: "Progress", description: "Mastery and recent activity", terms: "progress mastery score activity", href: "student-tools.html?view=progress" },
+    { label: "Notes", description: "Create or review study notes", terms: "notes note revise remember", href: "student-tools.html?view=notes" },
+    { label: "Settings", description: "Study goal and preferences", terms: "settings preference goal reminder", href: "student-tools.html?view=settings" }
+  ];
+
+  function matchingSearchItems() {
+    const query = searchInput.value.trim().toLowerCase();
+    return query ? searchItems.filter((item) => `${item.label} ${item.description} ${item.terms}`.toLowerCase().includes(query)) : [];
+  }
+
+  function renderSearchResults() {
+    const matches = matchingSearchItems();
+    searchResults.hidden = false;
+    searchResults.classList.remove("hidden");
+    searchInput.setAttribute("aria-expanded", "true");
+    searchResults.innerHTML = matches.length
+      ? matches.map((item) => `<a role="option" href="${item.href}" class="block border-b border-slate-100 px-4 py-3 last:border-0 hover:bg-indigo-50"><span class="block text-sm font-bold text-slate-900">${item.label}</span><span class="mt-0.5 block text-xs text-slate-500">${item.description}</span></a>`).join("")
+      : '<p class="px-4 py-3 text-sm text-slate-500" role="status">No matching learning tools.</p>';
+  }
+
+  if (searchForm && searchInput && searchResults) {
+    searchInput.addEventListener("input", function () {
+      if (searchInput.value.trim()) renderSearchResults();
+      else {
+        searchResults.hidden = true;
+        searchResults.classList.add("hidden");
+        searchInput.setAttribute("aria-expanded", "false");
+      }
+    });
+    searchForm.addEventListener("submit", function (event) {
+      event.preventDefault();
+      const firstMatch = matchingSearchItems()[0];
+      if (firstMatch) window.location.href = firstMatch.href;
+      else renderSearchResults();
+    });
+    searchInput.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        searchResults.hidden = true;
+        searchResults.classList.add("hidden");
+        searchInput.setAttribute("aria-expanded", "false");
+      }
+    });
+    document.addEventListener("click", function (event) {
+      if (!searchForm.contains(event.target)) {
+        searchResults.hidden = true;
+        searchResults.classList.add("hidden");
+        searchInput.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+
+  const notificationsToggle = document.getElementById("notificationsToggle");
+  const notificationsPanel = document.getElementById("notificationsPanel");
+  const notificationsClose = document.getElementById("notificationsClose");
+  if (notificationsToggle && notificationsPanel) {
+    const closeNotifications = () => {
+      notificationsPanel.classList.add("hidden");
+      notificationsToggle.setAttribute("aria-expanded", "false");
+    };
+    notificationsToggle.addEventListener("click", function () {
+      const isOpen = notificationsToggle.getAttribute("aria-expanded") === "true";
+      notificationsPanel.classList.toggle("hidden", isOpen);
+      notificationsToggle.setAttribute("aria-expanded", String(!isOpen));
+      if (!isOpen) notificationsToggle.querySelector("span")?.classList.add("hidden");
+    });
+    notificationsClose?.addEventListener("click", closeNotifications);
+    document.addEventListener("click", function (event) {
+      if (!notificationsToggle.parentElement.contains(event.target)) closeNotifications();
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") closeNotifications();
+    });
+  }
+
+  const now = new Date();
+  const dateKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const planKey = `reasonxStudentPlan:${dateKey}`;
+  let savedPlan = {};
+  try { savedPlan = JSON.parse(localStorage.getItem(planKey) || "{}"); } catch {}
+  document.querySelectorAll("[data-plan-task]").forEach((checkbox) => {
+    const taskKey = checkbox.dataset.planTask;
+    if (Object.prototype.hasOwnProperty.call(savedPlan, taskKey)) checkbox.checked = savedPlan[taskKey];
+    const updateTaskLabel = () => {
+      const label = checkbox.closest("label")?.querySelector("span");
+      label?.classList.toggle("text-slate-400", checkbox.checked);
+      label?.classList.toggle("line-through", checkbox.checked);
+      label?.classList.toggle("text-slate-700", !checkbox.checked);
+    };
+    updateTaskLabel();
+    checkbox.addEventListener("change", function () {
+      savedPlan[taskKey] = checkbox.checked;
+      try { localStorage.setItem(planKey, JSON.stringify(savedPlan)); } catch {}
+      updateTaskLabel();
+    });
+  });
+});
+</script>
+
+</body></html>

@@ -19,3 +19,34 @@ def tutor_message(level: int, question: dict, answer: str, label: str, scripted:
         return r.json().get("response", "").strip() or scripted
     except Exception:
         return scripted
+
+
+def chat_reply(messages: list[dict[str, str]]) -> str:
+    """Generate a conversational tutoring response with the configured Ollama model."""
+    if not MODEL:
+        raise RuntimeError("No chat model is configured. Set OLLAMA_MODEL and restart the backend.")
+
+    conversation = [{
+        "role": "system",
+        "content": (
+            "You are Reason X, a patient, precise AI tutor. Explain ideas clearly, ask useful follow-up "
+            "questions, and adapt to the learner's level. Show your reasoning in concise teaching steps, "
+            "but do not claim certainty when you are unsure. Use plain text and readable code blocks."
+        ),
+    }]
+    conversation.extend(messages[-16:])
+
+    try:
+        response = httpx.post(
+            f"{URL}/api/chat",
+            json={"model": MODEL, "messages": conversation, "stream": False},
+            timeout=60,
+        )
+        response.raise_for_status()
+        content = response.json().get("message", {}).get("content", "").strip()
+    except (httpx.HTTPError, ValueError) as exc:
+        raise RuntimeError("Could not reach the configured Ollama model. Check that Ollama is running and the model is available.") from exc
+
+    if not content:
+        raise RuntimeError("The configured AI model returned an empty response.")
+    return content

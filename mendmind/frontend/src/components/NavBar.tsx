@@ -2,18 +2,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "@/store/session";
-import { BookOpenIcon, TrendingUpIcon, UsersIcon, UserIcon } from "@/components/Icons";
-
-const navItems = [
-  { href: "/student/practice", label: "Practice Canvas", icon: BookOpenIcon },
-  { href: "/student/progress", label: "My Progress", icon: TrendingUpIcon },
-  { href: "/teacher/dashboard", label: "Teacher Dashboard", icon: UsersIcon },
-];
+import { BookOpenIcon, TrendingUpIcon, UsersIcon, TargetIcon } from "@/components/Icons";
 
 export default function NavBar() {
   const path = usePathname();
   const { user, logout } = useSession();
-  const isMock = process.env.NEXT_PUBLIC_USE_MOCK !== "false";
+  const navItems = user?.role === "teacher"
+    ? [
+        { href: "/teacher/home", label: "Home", icon: TargetIcon },
+        { href: "/teacher/dashboard", label: "Teacher Dashboard", icon: UsersIcon },
+      ]
+    : [
+          { href: "/student", label: "Dashboard", icon: TargetIcon },
+          { href: "/student/learnings", label: "My Learnings", icon: BookOpenIcon },
+      ];
 
   return (
     <header className="reason-top">
@@ -36,7 +38,11 @@ export default function NavBar() {
       {path !== "/" && user && (
         <div className="reason-product-nav">
           {navItems.map(({ href, label, icon: Icon }) => (
-            <Link key={href} href={href} className={path === href ? "active" : ""}>
+            <Link
+              key={href}
+              href={href}
+              className={(href === "/student" ? path === href : path === href || path.startsWith(`${href}/`)) ? "active" : ""}
+            >
               <Icon className="h-4 w-4" /> {label}
             </Link>
           ))}

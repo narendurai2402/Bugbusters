@@ -35,6 +35,7 @@ interface State {
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
 const questionBank = (category: PracticeCategory) => getQuestionsByCategory(category);
 const nextQ = (qi: number, total: number) => (qi + 1) % total;
+const emptyMastery = () => Object.fromEntries(CONCEPTS.map((concept) => [concept, 0]));
 
 export const useSession = create<State>((set, get) => ({
   user: null,
@@ -45,16 +46,26 @@ export const useSession = create<State>((set, get) => ({
   busy: false,
   last: null,
   note: null,
-  mastery: Object.fromEntries(CONCEPTS.map((c, i) => [c, [0.35, 0.4, 0.5][i % 3]])),
+  mastery: emptyMastery(),
   misconceptions: {},
   history: [],
 
   login: (name, email, role) =>
     set({
       user: { name, email, role },
+      category: "Math",
+      qi: 0,
+      attempt: 0,
+      phase: "answer",
+      busy: false,
+      last: null,
+      note: null,
+      mastery: emptyMastery(),
+      misconceptions: {},
+      history: [],
     }),
 
-  logout: () => set({ user: null }),
+  logout: () => set({ user: null, category: "Math", qi: 0, attempt: 0, phase: "answer", busy: false, last: null, note: null, mastery: emptyMastery(), misconceptions: {}, history: [] }),
 
   setCategory: (category) =>
     set({
@@ -69,13 +80,17 @@ export const useSession = create<State>((set, get) => ({
 
   submit: async (answer) => {
     const s = get();
+    if (!s.user?.email) {
+      set({ note: { kind: "rec", text: "Sign in to save your practice progress." } });
+      return;
+    }
     const qBank = questionBank(s.category);
     const q = qBank[s.qi] ?? qBank[0];
     const c = q.concept;
     set({ busy: true, note: null });
     try {
       if (s.phase === "recovery") {
-        const { recovered, mastery: bm } = await checkRecovery(q.id, answer);
+        const { recovered, mastery: bm } = await checkRecovery(q.id, answer, s.user.email);
         set((st) => {
           const bank = questionBank(st.category);
           const total = bank.length || 1;
@@ -99,7 +114,7 @@ export const useSession = create<State>((set, get) => ({
         return;
       }
       const attempt = s.attempt + 1;
-      const r = await submitAnswer(q.id, answer, attempt);
+      const r = await submitAnswer(q.id, answer, attempt, s.user.email);
       if (r.correct) {
         set((st) => {
           const bank = questionBank(st.category);

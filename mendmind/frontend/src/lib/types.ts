@@ -7,7 +7,7 @@ export interface SubmitAnswerResponse {
   mastery?: Record<string, number>; // present when the backend is live
 }
 
-export type PracticeCategory = "Math" | "DSA";
+export type PracticeCategory = "Math" | "DSA" | "Science" | "Python" | "Java";
 
 export interface QuestionDef {
   id: string;
@@ -18,4 +18,5 @@ export interface QuestionDef {
   wrong: Record<string, [string, number]>; // wrong answer -> [misconception, confidence]
   recovery: { text: string; answers: string[]; wrong: string };
   ladder: [string, string, string];
+  difficulty?: 1 | 2 | 3; // 1 = easy, 3 = hard
 }

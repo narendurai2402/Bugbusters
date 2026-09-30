@@ -1,7 +1,7 @@
 import { QUESTIONS } from "./mock";
 import type { SubmitAnswerResponse } from "./types";
 
-const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK !== "false";
+const USE_MOCK = process.env.NEXT_PUBLIC_USE_MOCK === "true";
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 const norm = (s: string) => s.replace(/\s/g, "").toLowerCase();
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -78,11 +78,9 @@ export async function loginUser(
     return post<LoginResponse>("/api/login", { email: cleanEmail, password, role });
   }
 
-  // Mock fallback
+  // Mock behavior is available only when explicitly enabled for local development.
   await wait(600);
-  const name = role === "student"
-    ? (cleanEmail.startsWith("aarav") ? "Aarav" : "Demo Student")
-    : "Prof. Sharma";
+  const name = cleanEmail.split("@")[0].replace(/[._-]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
   return { success: true, user: { name, email: cleanEmail, role } };
 }
 
@@ -119,17 +117,18 @@ export async function signUpUser(
 export async function submitAnswer(
   questionId: string,
   answer: string,
-  attempt: number
+  attempt: number,
+  studentId: string
 ): Promise<SubmitAnswerResponse> {
-  if (!USE_MOCK) return post("/api/answer", { questionId, answer, attempt });
+  if (!USE_MOCK) return post("/api/answer", { questionId, answer, attempt, studentId });
 
   await wait(800);
   const q = QUESTIONS.find((x) => x.id === questionId);
   if (!q) throw new Error(`Unknown question id: ${questionId}`);
 
   const a = norm(answer);
-  if (q.answers.includes(a)) return { correct: true };
-  const m = q.wrong[a];
+  if (q.answers.some((x) => norm(x) === a)) return { correct: true };
+  const m = Object.entries(q.wrong).find(([k]) => norm(k) === a)?.[1];
   const level = Math.min(Math.max(attempt, 1), 3) as 1 | 2 | 3;
   return {
     correct: false,
@@ -144,14 +143,15 @@ export async function submitAnswer(
 
 export async function checkRecovery(
   questionId: string,
-  answer: string
+  answer: string,
+  studentId: string
 ): Promise<{ recovered: boolean; mastery?: Record<string, number> }> {
-  if (!USE_MOCK) return post("/api/recovery", { questionId, answer });
+  if (!USE_MOCK) return post("/api/recovery", { questionId, answer, studentId });
 
   await wait(700);
   const q = QUESTIONS.find((x) => x.id === questionId);
   if (!q) throw new Error(`Unknown question id: ${questionId}`);
-  return { recovered: q.recovery.answers.includes(norm(answer)) };
+  return { recovered: q.recovery.answers.some((x) => norm(x) === norm(answer)) };
 }
 
 export interface TeacherData {
@@ -176,4 +176,140 @@ export async function getTeacherData(): Promise<TeacherData | null> {
   } catch {
     throw new Error("Teacher data response was malformed.");
   }
+}
+
+/** Generic GET helper — returns null on any failure so analytics never break the UI. */
+async function get<T>(path: string): Promise<T | null> {
+  try {
+    const res = await fetch(`${BASE}${path}`);
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
+}
+
+async function getRequired<T>(path: string, errorPrefix: string): Promise<T> {
+  let res: Response;
+  try {
+    res = await fetch(`${BASE}${path}`);
+  } catch {
+    throw new Error(`Network error: could not reach ${errorPrefix}.`);
+  }
+  if (!res.ok) {
+    let detail = `${errorPrefix} unavailable (HTTP ${res.status})`;
+    try {
+      const body = await res.json();
+      if (typeof body.detail === "string") detail = body.detail;
+    } catch {
+      // Keep the HTTP status message when the response is not JSON.
+    }
+    throw new Error(detail);
+  }
+  try {
+    return await res.json() as T;
+  } catch {
+    throw new Error(`${errorPrefix} response was malformed.`);
+  }
+}
+
+// ── Analytics (backend mode only; mock mode returns null) ───────────────────
+export interface ClassAnalytics {
+  students: number;
+  totalAttempts: number;
+  subjectAverages: Record<string, number>;
+  conceptAverages: { concept: string; subject: string; mastery: number }[];
+  atRisk: { name: string; average: number; weakestConcept: string; weakestMastery: number }[];
+  topMisconceptions: [string, number][];
+  hardestQuestions: { id: string; subject: string; concept: string; text: string; attempts: number; firstTryAccuracy: number }[];
+  activity: { date: string; attempts: number }[];
+  includesDemoData: boolean;
+}
+
+export interface StudentAnalytics {
+  student: string;
+  totalAttempts: number;
+  firstTryAccuracy: number | null;
+  currentStreak: number;
+  bestStreak: number;
+  recoveriesCompleted: number;
+  bySubject: Record<string, { attempted: number; correct: number; accuracy: number | null }>;
+  subjectMastery: Record<string, number>;
+  weakestConcepts: { concept: string; mastery: number }[];
+  misconceptions: [string, number][];
+  masteryTrend: { ts: string; overall: number }[];
+}
+
+export interface NextQuestion {
+  question: { id: string; subject: string; concept: string; text: string; difficulty: 1 | 2 | 3 };
+  reason: string;
+}
+
+export const getClassAnalytics = async () => (USE_MOCK ? null : get<ClassAnalytics>("/api/analytics/class"));
+
+export const getStudentAnalytics = async (studentId: string) =>
+  USE_MOCK ? null : get<StudentAnalytics>(`/api/analytics/student/${encodeURIComponent(studentId)}`);
+
+export const getNextQuestion = async (studentId: string, subject?: string) =>
+  USE_MOCK
+    ? null
+    : get<NextQuestion>(`/api/questions/next?studentId=${encodeURIComponent(studentId)}${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`);
+
+export type AssignTarget = "all" | "selected" | "at_risk";
+
+export interface NewAssignment {
+  title: string;
+  subject: string;
+  questionIds: string[];
+  mode: AssignTarget;
+  students: string[];
+  due?: string;
+  note?: string;
+}
+
+export interface Assignment extends Omit<NewAssignment, "due" | "note"> {
+  id: number;
+  due: string | null;
+  note: string;
+  created: string;
+}
+
+let mockAssignments: Assignment[] = [];
+
+export async function createAssignment(assignment: NewAssignment): Promise<Assignment> {
+  if (!USE_MOCK) return post<Assignment>("/api/assignments", assignment);
+
+  await wait(400);
+  const created: Assignment = {
+    ...assignment,
+    id: mockAssignments.length ? Math.max(...mockAssignments.map(({ id }) => id)) + 1 : 1,
+    due: assignment.due || null,
+    note: assignment.note ?? "",
+    created: new Date().toISOString(),
+  };
+  mockAssignments = [created, ...mockAssignments];
+  return created;
+}
+
+export async function listAssignments(): Promise<Assignment[]> {
+  if (USE_MOCK) return [...mockAssignments];
+  return (await getRequired<{ assignments: Assignment[] }>("/api/assignments", "Assignments")).assignments;
+}
+
+export async function getStudentAssignments(
+  studentId: string,
+  isAtRisk = false,
+): Promise<Assignment[]> {
+  if (USE_MOCK) {
+    return mockAssignments.filter((assignment) =>
+      assignment.mode === "all" ||
+      (assignment.mode === "selected" && assignment.students.includes(studentId)) ||
+      (assignment.mode === "at_risk" && isAtRisk)
+    );
+  }
+
+  return (await getRequired<{ assignments: Assignment[] }>(
+    `/api/assignments/student/${encodeURIComponent(studentId)}`,
+    "Student assignments",
+  )).assignments;
 }

@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSession } from "@/store/session";
-import { STUDENTS, CONCEPTS, TOP_MISCONCEPTIONS } from "@/lib/mock";
-import { getTeacherData, type TeacherData } from "@/lib/api";
+import { CATEGORIES, CONCEPTS, SUBJECT_OF } from "@/lib/mock";
+import { getTeacherData, getClassAnalytics, type TeacherData, type ClassAnalytics } from "@/lib/api";
 import {
   UsersIcon,
   ShieldAlertIcon,
@@ -21,14 +20,16 @@ const getMasteryColor = (v: number) => {
 };
 
 export default function Dashboard() {
-  const { mastery } = useSession();
   const [data, setData] = useState<TeacherData | null>(null);
   const [error, setError] = useState(false);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [subject, setSubject] = useState<"All" | (typeof CATEGORIES)[number]>("All");
+  const [analytics, setAnalytics] = useState<ClassAnalytics | null>(null);
 
   const loadData = () => {
     setLoading(true);
+    getClassAnalytics().then(setAnalytics).catch(() => setAnalytics(null));
     getTeacherData()
       .then((d) => {
         setData(d);
@@ -44,16 +45,27 @@ export default function Dashboard() {
     return () => clearInterval(t);
   }, []);
 
-  const students = data?.students ?? STUDENTS;
-  const mis = data?.misconceptions ?? TOP_MISCONCEPTIONS;
-  const rows = data ? students : [...students, { name: "You (Live Session)", mastery: CONCEPTS.map((c) => mastery[c]) }];
+  const students = data?.students ?? [];
+  const mis = data?.misconceptions ?? [];
+  const rows = students;
   
   const filteredRows = rows.filter((r) => r.name.toLowerCase().includes(search.toLowerCase()));
   const risk = rows.filter((r) => r.mastery.some((v) => v < 0.35));
-  const avg = Math.round(
-    (rows.flatMap((r) => r.mastery).reduce((a, b) => a + b, 0) / (rows.length * CONCEPTS.length || 1)) * 100
-  );
+  const allValues = rows.flatMap((r) => r.mastery);
+  const avg = Math.round((allValues.reduce((a, b) => a + b, 0) / (allValues.length || 1)) * 100);
   const maxMisCount = Math.max(...mis.map((m) => m[1]), 1);
+
+  // Subject filter for the heatmap + class-level stats (computed from the rows, works in mock and live mode)
+  const visible = CONCEPTS.map((c, i) => ({ c, i })).filter(({ c }) => subject === "All" || SUBJECT_OF[c] === subject);
+  const avgOf = (idxs: number[]) => {
+    const vals = rows.flatMap((r) => idxs.map((i) => r.mastery[i]).filter((v) => v !== undefined));
+    return vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+  };
+  const subjectStats = CATEGORIES.map((cat) => ({
+    cat,
+    avg: avgOf(CONCEPTS.map((c, i) => (SUBJECT_OF[c] === cat ? i : -1)).filter((i) => i >= 0)),
+  }));
+  const focus = CONCEPTS.map((c, i) => ({ c, avg: avgOf([i]) })).sort((a, b) => a.avg - b.avg).slice(0, 3);
 
   return (
     <div className="space-y-8">
@@ -64,7 +76,7 @@ export default function Dashboard() {
             <h1 className="text-3xl font-black text-white tracking-tight">Teacher Analytics</h1>
             <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 text-xs font-bold text-emerald-400">
               <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-              Live Live Refresh
+              Live Refresh
             </span>
           </div>
           <p className="text-sm text-slate-400 mt-1">
@@ -151,12 +163,29 @@ export default function Dashboard() {
             />
           </div>
 
+          {/* Subject tabs */}
+          <div className="flex flex-wrap gap-2">
+            {(["All", ...CATEGORIES] as const).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSubject(cat)}
+                className={`rounded-full border px-3.5 py-1 text-xs font-bold transition-colors ${
+                  subject === cat
+                    ? "border-teal-500/40 bg-teal-500/20 text-teal-300"
+                    : "border-slate-700 bg-slate-800/60 text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-800 text-slate-400">
                   <th className="py-3 font-semibold">Student Name</th>
-                  {CONCEPTS.map((c) => (
+                  {visible.map(({ c }) => (
                     <th key={c} className="py-3 px-2 text-center font-semibold">
                       {c}
                     </th>
@@ -180,7 +209,8 @@ export default function Dashboard() {
                         )}
                       </td>
 
-                      {r.mastery.map((v, i) => {
+                      {visible.map(({ i }) => {
+                        const v = r.mastery[i] ?? 0.5;
                         const pct = Math.round(v * 100);
                         const style = getMasteryColor(v);
 
@@ -202,6 +232,40 @@ export default function Dashboard() {
 
         {/* Misconceptions Distribution & At-Risk Panel */}
         <div className="space-y-6">
+          {/* Subject Performance + Focus Areas */}
+          <section className="rounded-3xl border border-slate-800/80 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
+            <div className="border-b border-slate-800 pb-3">
+              <h3 className="font-bold text-white text-base">Subject Performance</h3>
+              <p className="text-xs text-slate-400 mt-0.5">Average class mastery per subject</p>
+            </div>
+            <div className="space-y-3">
+              {subjectStats.map(({ cat, avg: a }) => {
+                const style = getMasteryColor(a);
+                return (
+                  <div key={cat} className="space-y-1.5">
+                    <div className="flex justify-between items-center text-xs font-semibold">
+                      <span className="text-slate-200">{cat}</span>
+                      <span className={`rounded-md border px-1.5 py-0.5 font-bold ${style.bg}`}>{Math.round(a * 100)}%</span>
+                    </div>
+                    <div className="h-2.5 w-full rounded-full bg-slate-800 overflow-hidden">
+                      <div className="h-full rounded-full bg-gradient-to-r from-teal-500 to-indigo-500 transition-all duration-700" style={{ width: `${Math.round(a * 100)}%` }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="border-t border-slate-800 pt-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Reteach next</p>
+              <div className="flex flex-wrap gap-2">
+                {focus.map(({ c, avg: a }) => (
+                  <span key={c} className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-bold text-amber-300">
+                    {c} · {Math.round(a * 100)}%
+                  </span>
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* Top Misconceptions */}
           <section className="rounded-3xl border border-slate-800/80 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
             <div className="border-b border-slate-800 pb-3">
@@ -256,6 +320,27 @@ export default function Dashboard() {
               <p className="text-xs text-slate-400">All students are above the 35% mastery threshold.</p>
             )}
           </section>
+
+          {/* Hardest Questions (from real attempt data, live mode only) */}
+          {analytics && analytics.hardestQuestions.length > 0 && (
+            <section className="rounded-3xl border border-slate-800/80 bg-slate-900/60 p-6 backdrop-blur-xl space-y-4">
+              <div className="border-b border-slate-800 pb-3">
+                <h3 className="font-bold text-white text-base">Hardest Questions</h3>
+                <p className="text-xs text-slate-400 mt-0.5">Lowest first-try accuracy · {analytics.totalAttempts} total attempts</p>
+              </div>
+              <div className="space-y-3">
+                {analytics.hardestQuestions.map((q) => (
+                  <div key={q.id} className="space-y-1">
+                    <div className="flex justify-between gap-3 text-xs font-semibold">
+                      <span className="text-slate-200">{q.text}</span>
+                      <span className="text-rose-400 font-bold whitespace-nowrap">{Math.round(q.firstTryAccuracy * 100)}%</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500">{q.subject} · {q.concept} · {q.attempts} first tries</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       </div>
     </div>

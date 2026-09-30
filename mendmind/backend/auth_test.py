@@ -33,10 +33,8 @@ CASES = [
     ("[BLOCK] No TLD (single-part domain)",     "user@nodomain",       "pass123",    "student", 400),
     ("[BLOCK] Empty email",                     "",                    "pass123",    "student", 400),
     ("[BLOCK] Password too short (<4 chars)",   "real@mendmind.edu",   "ab",         "student", 400),
-    ("[ALLOW] Student real email - seeded",     "student@mendmind.edu","password123","student", 200),
-    ("[ALLOW] Teacher real email - seeded",     "teacher@mendmind.edu","password123","teacher", 200),
-    ("[ALLOW] New real email auto-register",    "nivet@iitm.ac.in",    "secure123",  "student", 200),
-    ("[ALLOW] Aarav seeded real email",         "aarav@mendmind.edu",  "password123","student", 200),
+    ("[BLOCK] Login cannot auto-register",      "nivet@iitm.ac.in",    "secure123",  "student", 400),
+    ("[BLOCK] Unregistered email cannot login", "new-student@mendmind.edu", "secure123", "student", 400),
 ]
 
 passed = 0

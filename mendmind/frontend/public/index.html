@@ -1,0 +1,563 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Reason X - Your Smart AI Learning Assistant</title>
+<!-- Tailwind CSS CDN with forms and container queries plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              purple: '#5842ed',
+              dark: '#111827'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<style data-purpose="custom-decorations">
+    /* Subtle background glow and ambient gradient matching the image */
+    .bg-hero-gradient {
+      background: radial-gradient(circle at 85% 20%, rgba(216, 180, 254, 0.45) 0%, rgba(238, 242, 255, 0.3) 40%, rgba(255, 255, 255, 0) 70%),
+                  radial-gradient(circle at 10% 25%, rgba(224, 231, 255, 0.5) 0%, rgba(255, 255, 255, 0) 50%);
+    }
+    .hero-btn-gradient {
+      background: linear-gradient(135deg, #5345f0 0%, #3e32e4 100%);
+      box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.45);
+    }
+    .badge-float {
+      box-shadow: 0 14px 28px -4px rgba(124, 58, 237, 0.12), 0 8px 12px -4px rgba(0, 0, 0, 0.04);
+    }
+  </style>
+</head>
+<body class="bg-[#fbfcff] text-slate-800 font-sans antialiased overflow-x-hidden min-h-screen selection:bg-indigo-100 selection:text-indigo-700">
+<!-- BEGIN: MainHeader -->
+<header class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-6 flex items-center justify-between relative z-20">
+<!-- Brand Logo -->
+<a class="flex items-center gap-2 group" data-purpose="site-brand" href="#">
+<span class="text-3xl font-black tracking-tight text-slate-950 font-sans">
+        Reason <span class="text-[#4338ca]">X</span>
+</span>
+</a>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center space-x-9" data-purpose="main-navigation">
+<a class="text-sm font-medium text-slate-700 hover:text-indigo-600 transition-colors" href="#features">Features</a>
+<a class="text-sm font-medium text-slate-700 hover:text-indigo-600 transition-colors" href="#how-it-works">How It Works</a>
+<a class="text-sm font-medium text-slate-700 hover:text-indigo-600 transition-colors" href="#about">About</a>
+<a class="text-sm font-medium text-slate-700 hover:text-indigo-600 transition-colors" href="#contact">Contact</a>
+</nav>
+<!-- Header Actions -->
+<div class="flex items-center" data-purpose="header-cta">
+<a class="px-7 py-2.5 bg-[#3e35e6] hover:bg-[#342bc7] text-white font-medium text-sm rounded-full transition-all duration-200 shadow-md shadow-indigo-500/20 active:scale-95" href="login.html">
+        Login
+      </a>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: HeroSection -->
+<section class="relative pt-4 pb-12 overflow-hidden bg-hero-gradient" data-purpose="hero-section">
+<!-- Ambient blurred background shapes -->
+<div class="absolute -top-24 right-0 w-[580px] h-[580px] bg-purple-200/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute top-1/2 left-0 w-96 h-96 bg-indigo-100/50 rounded-full blur-3xl pointer-events-none -z-10"></div>
+<div class="max-w-7xl mx-auto px-6 lg:px-12">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-4">
+<!-- Hero Text Content (Left Column) -->
+<div class="lg:col-span-6 z-10">
+<div class="space-y-4">
+<h1 class="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-950 flex items-center gap-3">
+              Reason <span class="text-[#4338ca]">X</span>
+</h1>
+<p class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">
+              Your Smart AI Learning Assistant
+            </p>
+<p class="text-slate-500 text-base sm:text-lg max-w-lg leading-relaxed pt-1">
+              Learn smarter, practice better, solve faster and grow with AI.
+            </p>
+</div>
+<!-- Feature Bullets with Purple Dots -->
+<div class="flex flex-wrap items-center gap-y-2 gap-x-6 pt-5 text-sm sm:text-base font-semibold text-slate-800">
+<span class="inline-flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-[#5d3bf6]"></span> Learn
+            </span>
+<span class="inline-flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-[#5d3bf6]"></span> Practice
+            </span>
+<span class="inline-flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-[#5d3bf6]"></span> Solve
+            </span>
+<span class="inline-flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-[#5d3bf6]"></span> Grow
+            </span>
+</div>
+<!-- Primary CTA Button -->
+<div class="pt-8">
+<a class="inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold text-white rounded-full hero-btn-gradient hover:opacity-95 transition-all duration-200 group" href="signup.html">
+<span class="">Get Started Free</span>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="arrow-right" aria-hidden="true" class="lucide lucide-arrow-right w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+</a>
+</div>
+</div>
+<!-- Hero 3D Graphic Illustration (Right Column) -->
+<div class="lg:col-span-6 relative flex items-center justify-center" data-purpose="hero-illustration"><style>
+.hero-orbit-container {
+  animation: hero-orbit 28s linear infinite !important;
+  transform-origin: 50% 50% !important;
+}
+.hero-orbit-item {
+  animation: hero-counter-orbit 28s linear infinite !important;
+  transform-origin: 50% 50% !important;
+}
+@keyframes hero-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes hero-counter-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-orbit-container, .hero-orbit-item {
+    animation: none !important;
+  }
+}
+</style>
+<!-- Illustration Wrapper with floating cards & robot composition -->
+<div class="relative w-full max-w-[530px] aspect-[4/3] flex items-center justify-center"><!-- Smooth Rotating Orbit Ring Container for Floating Icons -->
+<div class="absolute inset-0 z-20 pointer-events-none hero-orbit-container">
+  <!-- Floating Badge: Code Tag (Left) -->
+  <div class="absolute left-4 top-24 pointer-events-auto">
+    <div class="hero-orbit-item bg-white/90 backdrop-blur-md px-3.5 py-3 rounded-2xl badge-float border border-white flex items-center justify-center text-indigo-700 font-mono font-bold text-lg">
+      &lt;/&gt;
+    </div>
+  </div>
+  <!-- Floating Badge: Idea / Lightbulb (Top Left) -->
+  <div class="absolute left-28 top-3 pointer-events-auto">
+    <div class="hero-orbit-item bg-white/90 backdrop-blur-md p-3 rounded-2xl badge-float border border-white flex items-center justify-center shadow-lg shadow-purple-500/5">
+      <div class="w-8 h-8 rounded-xl bg-amber-50 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="lightbulb" aria-hidden="true" class="lucide lucide-lightbulb w-5 h-5 text-amber-500 fill-amber-400"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg>
+      </div>
+    </div>
+  </div>
+  <!-- Floating Badge: Document / Notes (Top Right) -->
+  <div class="absolute right-20 top-8 pointer-events-auto">
+    <div class="hero-orbit-item bg-white/90 backdrop-blur-md p-3 rounded-2xl badge-float border border-white flex items-center justify-center shadow-lg shadow-purple-500/5">
+      <div class="w-8 h-8 rounded-xl bg-emerald-50 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="file-text" aria-hidden="true" class="lucide lucide-file-text w-5 h-5 text-emerald-500"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M14 2v5a1 1 0 0 0 1 1h5"></path><path d="M10 9H8"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
+      </div>
+    </div>
+  </div>
+  <!-- Floating Badge: Graduation Cap (Middle Right) -->
+  <div class="absolute right-8 top-36 pointer-events-auto">
+    <div class="hero-orbit-item bg-white/90 backdrop-blur-md p-3.5 rounded-2xl badge-float border border-white flex items-center justify-center shadow-lg shadow-purple-500/5">
+      <div class="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="graduation-cap" aria-hidden="true" class="lucide lucide-graduation-cap w-5 h-5 text-indigo-600"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path><path d="M22 10v6"></path><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path></svg>
+      </div>
+    </div>
+  </div>
+  <!-- Floating Badge: Growth Analytics Bar Chart (Bottom Right) -->
+  <div class="absolute right-14 bottom-14 pointer-events-auto">
+    <div class="hero-orbit-item bg-white/90 backdrop-blur-md p-3 rounded-2xl badge-float border border-white flex items-center justify-center shadow-lg shadow-purple-500/5">
+      <div class="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="bar-chart-2" aria-hidden="true" class="lucide lucide-bar-chart-2 w-5 h-5 text-blue-600"><path d="M5 21v-6"></path><path d="M12 21V3"></path><path d="M19 21V9"></path></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3D Composition Assembly (Central Stationary Robot) -->
+<div class="relative w-full h-full flex items-center justify-center select-none pointer-events-none">
+  <!-- Subtle decorative cloud puff / backdrop pedestal -->
+  <div class="absolute bottom-2 w-80 h-16 bg-gradient-to-t from-indigo-100/60 to-transparent rounded-full blur-xl"></div>
+  <!-- Main Robot Body Container -->
+  <div class="relative flex flex-col items-center z-10">
+    <!-- Robot Antenna with glow bulb -->
+    <div class="flex flex-col items-center -mb-2 z-10">
+      <div class="w-4 h-4 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-400 shadow-md shadow-indigo-500/40"></div>
+      <div class="w-1.5 h-3 bg-slate-300 rounded-full"></div>
+    </div>
+    <!-- Robot Head -->
+    <div class="relative w-44 h-32 bg-gradient-to-b from-white via-slate-50 to-slate-200 rounded-[2.5rem] shadow-xl border-4 border-white flex items-center justify-center p-3">
+      <!-- Robot Ear pods -->
+      <div class="absolute -left-3.5 w-4 h-9 bg-indigo-600 rounded-full shadow-md"></div>
+      <div class="absolute -right-3.5 w-4 h-9 bg-indigo-600 rounded-full shadow-md"></div>
+      <!-- Visor Screen -->
+      <div class="w-full h-full bg-[#1e1b4b] rounded-[1.8rem] flex items-center justify-center gap-5 relative overflow-hidden shadow-inner">
+        <!-- Smiling Curved Cyan Eyes -->
+        <div class="w-5 h-4 border-b-4 border-cyan-300 rounded-b-full"></div>
+        <div class="w-5 h-4 border-b-4 border-cyan-300 rounded-b-full"></div>
+        <!-- Cheek glow -->
+        <div class="absolute bottom-3 left-6 w-3 h-1.5 bg-pink-400/40 rounded-full blur-[1px]"></div>
+        <div class="absolute bottom-3 right-6 w-3 h-1.5 bg-pink-400/40 rounded-full blur-[1px]"></div>
+      </div>
+    </div>
+    <!-- Robot Torso & Book -->
+    <div class="relative -mt-3 flex flex-col items-center">
+      <!-- Torso shell -->
+      <div class="w-28 h-24 bg-gradient-to-b from-white to-slate-200 rounded-3xl border-2 border-white shadow-lg"></div>
+      <!-- Arms holding book -->
+      <div class="absolute -left-5 top-2 w-7 h-16 bg-slate-100 rounded-full rotate-45 border border-white shadow-sm"></div>
+      <div class="absolute -right-5 top-2 w-7 h-16 bg-slate-100 rounded-full -rotate-45 border border-white shadow-sm"></div>
+      <!-- Open Purple Book In Hands -->
+      <div class="absolute top-2 z-20 flex items-center justify-center">
+        <div class="relative w-28 h-18 bg-gradient-to-r from-[#4f3ff0] to-[#6d4efb] rounded-md shadow-2xl p-2 flex text-white transform -rotate-2">
+          <div class="w-1/2 border-r border-indigo-300/40 pr-1 text-[7px] space-y-1 opacity-70">
+            <div class="h-1 bg-white/70 rounded"></div>
+            <div class="h-1 bg-white/50 rounded w-3/4"></div>
+            <div class="h-1 bg-white/60 rounded"></div>
+          </div>
+          <div class="w-1/2 pl-1 text-[7px] space-y-1 opacity-70">
+            <div class="h-1 bg-white/70 rounded"></div>
+            <div class="h-1 bg-white/50 rounded"></div>
+            <div class="h-1 bg-white/60 rounded w-2/3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Potted plant on the left of books -->
+  <div class="absolute bottom-4 left-16 z-20 flex flex-col items-center">
+    <!-- Purple/Indigo Leaves -->
+    <div class="relative w-14 h-12 flex justify-center">
+      <div class="absolute bottom-0 w-4 h-10 bg-indigo-600 rounded-full -rotate-25 shadow-sm"></div>
+      <div class="absolute bottom-0 w-4 h-11 bg-indigo-700 rounded-full shadow-sm"></div>
+      <div class="absolute bottom-0 w-4 h-10 bg-indigo-500 rounded-full rotate-25 shadow-sm"></div>
+      <div class="absolute bottom-0 -left-1 w-3 h-8 bg-indigo-800 rounded-full -rotate-45"></div>
+      <div class="absolute bottom-0 -right-1 w-3 h-8 bg-indigo-800 rounded-full rotate-45"></div>
+    </div>
+    <!-- Clean White Pot -->
+    <div class="w-11 h-10 bg-white rounded-b-xl border border-slate-200 shadow-md"></div>
+  </div>
+  <!-- Stack of Hardcover Purple Books at the base -->
+  <div class="absolute bottom-2 left-32 z-10 flex flex-col items-center">
+    <!-- Top book -->
+    <div class="w-32 h-6 bg-[#4e3dee] rounded-md border-b-2 border-indigo-700 shadow-md flex items-center px-3">
+      <div class="w-full h-1 bg-indigo-300/30 rounded"></div>
+    </div>
+    <!-- Bottom book -->
+    <div class="w-36 h-7 bg-[#3c2ecd] rounded-md border-b-2 border-indigo-900 shadow-lg -mt-1 flex items-center px-3">
+      <div class="w-full h-1 bg-indigo-300/20 rounded"></div>
+    </div>
+  </div>
+</div></div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: HeroSection -->
+<!-- BEGIN: FeatureHighlightsStrip -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 -mt-4 mb-16 relative z-30" data-purpose="feature-highlights" id="features">
+<div class="bg-white rounded-3xl p-4 lg:p-6 shadow-xl shadow-slate-200/50 border border-slate-100">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+<!-- Card 1: Smart Learning -->
+<div class="flex items-center gap-4 pt-4 sm:pt-0 sm:px-3">
+<div class="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center flex-shrink-0 text-indigo-600">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="book-open" aria-hidden="true" class="lucide lucide-book-open w-7 h-7"><path d="M12 5v16"></path><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z"></path></svg>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base">Smart Learning</h3>
+<p class="text-xs text-slate-500 mt-0.5 leading-snug">Personalized learning with AI assistance</p>
+</div>
+</div>
+<!-- Card 2: AI Assistance -->
+<div class="flex items-center gap-4 pt-4 sm:pt-0 sm:px-3">
+<div class="w-14 h-14 rounded-2xl bg-teal-50 flex items-center justify-center flex-shrink-0 text-teal-500">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="trending-up" aria-hidden="true" class="lucide lucide-trending-up w-7 h-7"><path d="M16 7h6v6"></path><path d="m22 7-8.5 8.5-5-5L2 17"></path></svg>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base">AI Assistance</h3>
+<p class="text-xs text-slate-500 mt-0.5 leading-snug">Get instant explanations and hints</p>
+</div>
+</div>
+<!-- Card 3: Practice & Solve -->
+<div class="flex items-center gap-4 pt-4 sm:pt-0 sm:px-3">
+<div class="w-14 h-14 rounded-2xl bg-amber-50 flex items-center justify-center flex-shrink-0 text-amber-500">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="file-question" aria-hidden="true" class="lucide lucide-file-question w-7 h-7"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path><path d="M12 17h.01"></path><path d="M9.1 9a3 3 0 0 1 5.82 1c0 2-3 3-3 3"></path></svg>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base">Practice &amp; Solve</h3>
+<p class="text-xs text-slate-500 mt-0.5 leading-snug">Solve problems and take quizzes</p>
+</div>
+</div>
+<!-- Card 4: Track Progress -->
+<div class="flex items-center gap-4 pt-4 sm:pt-0 sm:px-3">
+<div class="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center flex-shrink-0 text-rose-500">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="target" aria-hidden="true" class="lucide lucide-target w-7 h-7"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+</div>
+<div>
+<h3 class="font-bold text-slate-900 text-base">Track Progress</h3>
+<p class="text-xs text-slate-500 mt-0.5 leading-snug">Monitor your growth and achievements</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: FeatureHighlightsStrip -->
+<!-- BEGIN: AboutAndWorkflowSection -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 py-12" data-purpose="about-section" id="about">
+  <div class="bg-white rounded-3xl p-8 lg:p-12 shadow-xl shadow-slate-200/50 border border-slate-100">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div class="lg:col-span-6 space-y-4">
+        <div>
+          <span class="text-xs uppercase tracking-wider font-extrabold text-indigo-600 block mb-1">About</span>
+          <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+            Why Reason <span class="text-[#4338ca]">X</span>?
+          </h2>
+        </div>
+        <p class="text-slate-600 text-base leading-relaxed pt-1">
+          Reason X helps students learn, practice and solve problems with the power of AI. Whether it's concept clarification, doubt solving or exam practice — Reason X is your personal, round-the-clock learning partner.
+        </p>
+        <div class="pt-2">
+          <a class="inline-flex items-center text-sm font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50/70 hover:bg-indigo-100/70 px-5 py-2.5 rounded-full transition-colors group" href="#about">
+            <span class="">Learn More</span>
+            <i class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" data-lucide="arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-5 rounded-2xl bg-indigo-50/70 border border-indigo-100/50">
+          <div class="text-2xl font-black text-indigo-600 mb-1">24/7</div>
+          <h4 class="font-bold text-slate-900 text-sm mb-1">Instant AI Support</h4>
+          <p class="text-xs text-slate-500 leading-snug">Step-by-step guidance whenever you get stuck on any problem.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-teal-50 border border-slate-100">
+          <div class="text-2xl font-black text-teal-600 mb-1">100k+</div>
+          <h4 class="font-bold text-slate-900 text-sm mb-1">Practice Questions</h4>
+          <p class="text-xs text-slate-500 leading-snug">Adaptive problem sets tailored directly to your syllabus.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-amber-50 border border-slate-100">
+          <div class="text-2xl font-black text-amber-500 mb-1">3x Faster</div>
+          <h4 class="font-bold text-slate-900 text-sm mb-1">Concept Mastery</h4>
+          <p class="text-xs text-slate-500 leading-snug">Accelerate learning retention with targeted explanations.</p>
+        </div>
+        <div class="p-5 rounded-2xl bg-rose-50 border border-slate-100">
+          <div class="text-2xl font-black text-rose-500 mb-1">99.8%</div>
+          <h4 class="font-bold text-slate-900 text-sm mb-1">Accuracy Rate</h4>
+          <p class="text-xs text-slate-500 leading-snug">Verified answers powered by high-precision learning models.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="max-w-7xl mx-auto px-6 lg:px-12 pb-24 pt-4" data-purpose="how-it-works-workflow" id="how-it-works">
+  <div class="text-center max-w-2xl mx-auto mb-12">
+    <span class="text-xs uppercase tracking-wider font-extrabold text-indigo-600 block mb-2">How It Works</span>
+    <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
+      How Reason <span class="text-[#4338ca]">X</span> Works in 4 Simple Steps
+    </h2>
+    <p class="text-slate-600 text-sm leading-relaxed">
+      Master any topic seamlessly from question upload to progress analytics in just four guided steps.
+    </p>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+    <!-- Step 1 -->
+    <div class="relative bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col items-center text-center h-full group hover:shadow-md transition-shadow">
+      <div class="absolute -top-3 left-6 w-7 h-7 rounded-full bg-purple-200/80 text-indigo-900 font-bold text-xs flex items-center justify-center">
+        1
+      </div>
+      <div class="w-14 h-14 rounded-2xl bg-purple-50 flex items-center justify-center text-indigo-600 mb-4 mt-1">
+        <i class="w-7 h-7" data-lucide="arrow-up-circle"></i>
+      </div>
+      <h4 class="font-bold text-slate-900 text-base mb-1">Ask or Upload</h4>
+      <p class="text-xs text-slate-500 leading-relaxed">Type your question or upload a problem image directly</p>
+      <div class="hidden lg:block absolute -right-3.5 top-1/2 -translate-y-1/2 z-10 text-slate-400">
+        <i class="w-4 h-4" data-lucide="arrow-right"></i>
+      </div>
+    </div>
+    <!-- Step 2 -->
+    <div class="relative bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col items-center text-center h-full group hover:shadow-md transition-shadow">
+      <div class="absolute -top-3 left-6 w-7 h-7 rounded-full bg-purple-200/80 text-indigo-900 font-bold text-xs flex items-center justify-center">
+        2
+      </div>
+      <div class="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 mb-4 mt-1">
+        <i class="w-7 h-7" data-lucide="bot"></i>
+      </div>
+      <h4 class="font-bold text-slate-900 text-base mb-1">Get AI Help</h4>
+      <p class="text-xs text-slate-500 leading-relaxed">Receive clear step-by-step solutions and conceptual breakdowns</p>
+      <div class="hidden lg:block absolute -right-3.5 top-1/2 -translate-y-1/2 z-10 text-slate-400">
+        <i class="w-4 h-4" data-lucide="arrow-right"></i>
+      </div>
+    </div>
+    <!-- Step 3 -->
+    <div class="relative bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col items-center text-center h-full group hover:shadow-md transition-shadow">
+      <div class="absolute -top-3 left-6 w-7 h-7 rounded-full bg-purple-200/80 text-indigo-900 font-bold text-xs flex items-center justify-center">
+        3
+      </div>
+      <div class="w-14 h-14 rounded-2xl bg-teal-50 flex items-center justify-center text-teal-600 mb-4 mt-1">
+        <i class="w-7 h-7" data-lucide="clipboard-check"></i>
+      </div>
+      <h4 class="font-bold text-slate-900 text-base mb-1">Practice More</h4>
+      <p class="text-xs text-slate-500 leading-relaxed">Solve similar recommended problems and take targeted quizzes</p>
+      <div class="hidden lg:block absolute -right-3.5 top-1/2 -translate-y-1/2 z-10 text-slate-400">
+        <i class="w-4 h-4" data-lucide="arrow-right"></i>
+      </div>
+    </div>
+    <!-- Step 4 -->
+    <div class="relative bg-white rounded-2xl p-6 border border-slate-100 shadow-sm flex flex-col items-center text-center h-full group hover:shadow-md transition-shadow">
+      <div class="absolute -top-3 left-6 w-7 h-7 rounded-full bg-purple-200/80 text-indigo-900 font-bold text-xs flex items-center justify-center">
+        4
+      </div>
+      <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 mb-4 mt-1">
+        <i class="w-7 h-7" data-lucide="bar-chart"></i>
+      </div>
+      <h4 class="font-bold text-slate-900 text-base mb-1">Track Progress</h4>
+      <p class="text-xs text-slate-500 leading-relaxed">See your learning speed and score improvement over time</p>
+    </div>
+  </div>
+</section>
+<!-- END: AboutAndWorkflowSection -->
+<!-- BEGIN: MainFooter -->
+<section class="max-w-7xl mx-auto px-6 lg:px-12 pb-24 pt-4" data-purpose="contact-section" id="contact">
+  <div class="text-center max-w-2xl mx-auto mb-12">
+    <span class="text-xs uppercase tracking-wider font-extrabold text-indigo-600 block mb-2">Contact Us</span>
+    <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight mb-3">
+      Get in Touch with Reason <span class="text-[#4338ca]">X</span>
+    </h2>
+    <p class="text-slate-600 text-sm leading-relaxed">
+      Have questions or need assistance? Reach out to our team anytime.
+    </p>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+    <!-- Contact Cards (Left Column, 5 cols) -->
+    <div class="lg:col-span-5 flex flex-col justify-between gap-4">
+      <!-- Card 1: Email Support -->
+      <div class="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center flex-shrink-0 text-indigo-600">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-base mb-1">Email Support</h4>
+          <p class="text-xs text-slate-500 mb-2 leading-snug">Round-the-clock responses for technical &amp; learning inquiries.</p>
+          <a href="mailto:support@reasonx.ai" class="text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">support@reasonx.ai</a>
+        </div>
+      </div>
+      <!-- Card 2: Community & Live Chat -->
+      <div class="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
+        <div class="w-12 h-12 rounded-2xl bg-teal-50 flex items-center justify-center flex-shrink-0 text-teal-600">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-base mb-1">Live Chat &amp; Community</h4>
+          <p class="text-xs text-slate-500 mb-2 leading-snug">Chat directly with AI tutors or join our 40,000+ student Discord.</p>
+          <a href="#" class="text-sm font-semibold text-teal-600 hover:text-teal-700 transition-colors">Join Student Forum →</a>
+        </div>
+      </div>
+      <!-- Card 3: Location / Campus Hub -->
+      <div class="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
+        <div class="w-12 h-12 rounded-2xl bg-purple-50 flex items-center justify-center flex-shrink-0 text-indigo-600">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        </div>
+        <div>
+          <h4 class="font-bold text-slate-900 text-base mb-1">Headquarters &amp; Hub</h4>
+          <p class="text-xs text-slate-500 leading-snug">548 Market Street, Suite 9200<br>San Francisco, CA 94104</p>
+        </div>
+      </div>
+    </div>
+    <!-- Quick Message Form (Right Column, 7 cols) -->
+    <div class="lg:col-span-7 bg-white rounded-3xl p-8 lg:p-10 shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col justify-center">
+      <h3 class="text-xl font-bold text-slate-900 mb-2">Send Us a Message</h3>
+      <p class="text-xs text-slate-500 mb-6">Our education and support specialists typically reply in under 15 minutes.</p>
+      <form onsubmit="event.preventDefault();" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Full Name</label>
+            <input type="text" placeholder="Alex Johnson" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 outline-none transition-colors bg-[#fbfcff]">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1.5">Email Address</label>
+            <input type="email" placeholder="alex@example.com" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 outline-none transition-colors bg-[#fbfcff]">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Topic</label>
+          <select class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-700 focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 outline-none transition-colors bg-[#fbfcff]">
+            <option>General Learning Inquiry</option>
+            <option>AI Model &amp; Solution Feedback</option>
+            <option>Classroom / Institution Plans</option>
+            <option>Account &amp; Billing Assistance</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">Message</label>
+          <textarea rows="4" placeholder="How can we help your learning journey?" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 outline-none transition-colors bg-[#fbfcff]"></textarea>
+        </div>
+        <div class="pt-2">
+          <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 bg-[#3e35e6] hover:bg-[#342bc7] text-white font-semibold text-sm rounded-full transition-all duration-200 shadow-md shadow-indigo-500/20 active:scale-95">
+            Send Message
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section><footer class="border-t border-slate-100 py-8 bg-white/60 text-center text-xs text-slate-400">
+<p class="">© 2025 Reason X. All rights reserved. Your Smart AI Learning Assistant.</p>
+</footer>
+<!-- END: MainFooter -->
+<!-- Initialize Feather / Lucide Icons -->
+<script data-purpose="icon-initialization">
+    lucide.createIcons();
+  </script>
+
+
+
+<script id="reasonx-auth">
+(function () {
+  const PAGES = {
+    home: 'index.html',
+    signup: 'signup.html',
+    role: 'role-selection.html',
+    verify: 'email-verification.html',
+    login: 'login.html',
+    student: 'student-dashboard.html',
+    tutor: 'ai-tutor.html',
+    teacher: 'teacher-dashboard.html'
+  };
+
+  window.ReasonXAuth = {
+    getRole() { return localStorage.getItem('reasonXRole') || ''; },
+    isLoggedIn() { return localStorage.getItem('reasonXLoggedIn') === 'true'; },
+    setRole(role) {
+      if (role === 'student' || role === 'teacher') localStorage.setItem('reasonXRole', role);
+    },
+    login(role) {
+      this.setRole(role);
+      localStorage.setItem('reasonXLoggedIn', 'true');
+      localStorage.setItem('reasonXLoginAt', new Date().toISOString());
+    },
+    logout() {
+      localStorage.removeItem('reasonXLoggedIn');
+      localStorage.removeItem('reasonXLoginAt');
+      window.location.href = PAGES.login;
+    },
+    goByRole() {
+      const role = this.getRole();
+      if (!this.isLoggedIn()) { window.location.href = PAGES.login; return; }
+      window.location.href = role === 'teacher' ? PAGES.teacher : PAGES.student;
+    }
+  };
+
+  window.RX = window.ReasonXAuth;
+})();
+</script>
+
+</body></html>

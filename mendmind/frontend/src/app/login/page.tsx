@@ -42,31 +42,13 @@ export default function LoginPage() {
 
       if (response.success && response.user) {
         login(response.user.name, response.user.email, response.user.role);
-        router.push(response.user.role === "student" ? "/student" : "/teacher/dashboard");
+        router.push(response.user.role === "student" ? "/student" : "/teacher/home");
       }
     } catch (error: unknown) {
       setErrorMsg(error instanceof Error ? error.message : "Authentication failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleQuickLogin = (selectedRole: "student" | "teacher") => {
-    setMode("signin");
-    setRole(selectedRole);
-    setEmail(selectedRole === "student" ? "student@mendmind.edu" : "teacher@mendmind.edu");
-    setPassword("password123");
-    window.setTimeout(() => {
-      const cleanEmail = selectedRole === "student" ? "student@mendmind.edu" : "teacher@mendmind.edu";
-      setLoading(true);
-      loginUser(cleanEmail, "password123", selectedRole)
-        .then((response) => {
-          login(response.user.name, response.user.email, response.user.role);
-          router.push(response.user.role === "student" ? "/student" : "/teacher/dashboard");
-        })
-        .catch((error: unknown) => setErrorMsg(error instanceof Error ? error.message : "Authentication failed."))
-        .finally(() => setLoading(false));
-    }, 0);
   };
 
   return (
@@ -109,10 +91,6 @@ export default function LoginPage() {
             <button type="submit" className="reason-btn" disabled={loading}>{loading ? "Please wait..." : mode === "signup" ? "Sign Up →" : "Log In →"}</button>
           </form>
 
-          <div className="reason-demo">
-            <div>Demo accounts</div>
-            <button type="button" onClick={() => handleQuickLogin("student")}>Student demo</button> · <button type="button" onClick={() => handleQuickLogin("teacher")}>Teacher demo</button>
-          </div>
           <div className="bottom">{mode === "signin" ? "Don't have an account? " : "Already have an account? "}<b onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setErrorMsg(null); }}>{mode === "signin" ? "Sign Up" : "Sign In"}</b></div>
           <Link href="/" className="sr-only">Back to home</Link>
         </div>

@@ -102,7 +102,215 @@ DSA_QUESTIONS = {
                     "Explanation: O(log n) grows much more slowly than O(n); repeated halving is smaller than checking each element."]},
 }
 
-QUESTIONS = {**MATH_QUESTIONS, **DSA_QUESTIONS}
-QUESTION_BANKS = {"Math": list(MATH_QUESTIONS.values()), "DSA": list(DSA_QUESTIONS.values())}
+SCIENCE_QUESTIONS = {
+  "s1": {"category": "Science", "concept": "Gravity and falling", "text": "In a vacuum, which hits the ground first: a 1 kg ball or a 10 kg ball dropped together?", "answers": ["neither", "same", "both", "at the same time", "together", "they land together"],
+         "wrong": {"10 kg": ("Heavier objects fall faster", 0.85), "10kg ball": ("Heavier objects fall faster", 0.85), "the 10 kg ball": ("Heavier objects fall faster", 0.85)},
+         "recovery": {"text": "In a vacuum, which hits first: a 2 kg rock or a 5 kg rock dropped together?", "answers": ["neither", "same", "both", "at the same time", "together"], "wrong": "5 kg"},
+         "ladder": ["What is pulling both balls down, and does that pull depend on how heavy the ball is?",
+                    "Hint: a heavier ball has more gravity pulling on it, but it also has more mass to move. What happens to the acceleration?",
+                    "Explanation: with no air, all objects accelerate at the same rate (about 9.8 m/s2), so both land together."]},
+  "s2": {"category": "Science", "concept": "Seasons", "text": "What mainly causes the seasons on Earth?", "answers": ["tilt", "axial tilt", "earth's tilt", "the tilt of earth's axis", "axis tilt", "tilt of the axis"],
+         "wrong": {"distance from the sun": ("Seasons come from distance to the Sun", 0.83), "distance": ("Seasons come from distance to the Sun", 0.83), "closer to the sun": ("Seasons come from distance to the Sun", 0.83)},
+         "recovery": {"text": "When it is summer in Canada, is it winter in Australia? (yes/no)", "answers": ["yes"], "wrong": "no"},
+         "ladder": ["If distance caused seasons, would both hemispheres have summer at the same time?",
+                    "Hint: Earth's axis is tilted about 23.5 degrees. What does that change about how sunlight hits each hemisphere?",
+                    "Explanation: the tilt makes one hemisphere receive more direct sunlight for longer days, so seasons are opposite in the two hemispheres."]},
+  "s3": {"category": "Science", "concept": "Conservation of mass", "text": "When ice melts into water, does its mass increase, decrease, or stay the same?", "answers": ["stay the same", "stays the same", "same", "unchanged", "stays same"],
+         "wrong": {"decrease": ("Thinks matter disappears in a change of state", 0.78), "decreases": ("Thinks matter disappears in a change of state", 0.78), "increase": ("Thinks matter appears in a change of state", 0.7)},
+         "recovery": {"text": "Water boils in a sealed pot. Does the total mass increase, decrease, or stay the same?", "answers": ["stay the same", "stays the same", "same", "unchanged"], "wrong": "decrease"},
+         "ladder": ["Where do the particles of ice go when it melts?",
+                    "Hint: melting changes how the particles are arranged, not how many there are.",
+                    "Explanation: a change of state does not add or remove matter, so the mass stays the same."]},
+  "s4": {"category": "Science", "concept": "Force and motion", "text": "A ball rolls across a frictionless floor. Is a continuous push needed to keep it moving? (yes/no)", "answers": ["no"],
+         "wrong": {"yes": ("Believes motion needs a constant force", 0.84)},
+         "recovery": {"text": "A puck slides on frictionless ice. Is a force needed to keep it moving at the same speed? (yes/no)", "answers": ["no"], "wrong": "yes"},
+         "ladder": ["What does a moving object do if nothing pushes or pulls it?",
+                    "Hint: Newton's first law says an object keeps its velocity unless a net force acts on it.",
+                    "Explanation: force changes motion, it is not needed to maintain it. Without friction the ball keeps rolling."]},
+  "s5": {"category": "Science", "concept": "Electric current", "text": "In a simple circuit, is current 'used up' by the bulb? (yes/no)", "answers": ["no"],
+         "wrong": {"yes": ("Thinks current is used up by components", 0.8)},
+         "recovery": {"text": "In a series circuit, is the current the same before and after the bulb? (yes/no)", "answers": ["yes"], "wrong": "no"},
+         "ladder": ["If current were used up, what would happen to the charge that flows into the bulb?",
+                    "Hint: charge is conserved. The bulb transfers energy, not charge.",
+                    "Explanation: the same current flows back to the battery. What the bulb uses up is energy, not current."]},
+  "s6": {"category": "Science", "concept": "Heat and temperature", "text": "Which has the higher temperature: a bathtub of 40 C water or a cup of 60 C water?", "answers": ["cup", "the cup", "60", "60 c", "cup of water"],
+         "wrong": {"bathtub": ("Confuses total heat with temperature", 0.79), "the bathtub": ("Confuses total heat with temperature", 0.79), "40": ("Confuses total heat with temperature", 0.79)},
+         "recovery": {"text": "Which has the higher temperature: a lake at 15 C or a mug at 70 C?", "answers": ["mug", "the mug", "70", "70 c"], "wrong": "lake"},
+         "ladder": ["What does a thermometer reading tell you: how much heat there is in total, or how hot each particle is on average?",
+                    "Hint: the bathtub holds more heat energy overall, but temperature is an average per particle.",
+                    "Explanation: temperature does not depend on amount. The 60 C cup is hotter even though the bathtub holds more total heat."]},
+  "s7": {"category": "Science", "concept": "Plant growth", "text": "Where do plants get most of the mass they use to build their bodies?", "answers": ["air", "the air", "carbon dioxide", "co2"],
+         "wrong": {"soil": ("Thinks plant mass comes from soil", 0.82), "the soil": ("Thinks plant mass comes from soil", 0.82), "dirt": ("Thinks plant mass comes from soil", 0.82), "water": ("Thinks plant mass comes from soil or water only", 0.7)},
+         "recovery": {"text": "Which gas do plants take in from the air to make sugar?", "answers": ["carbon dioxide", "co2"], "wrong": "oxygen"},
+         "ladder": ["A tree grows huge but the soil around it barely shrinks. What does that tell you?",
+                    "Hint: plants build sugar from carbon dioxide and water using light.",
+                    "Explanation: most plant mass is carbon that comes from CO2 in the air through photosynthesis, not from the soil."]},
+  "s8": {"category": "Science", "concept": "Moon phases", "text": "Are the phases of the Moon caused by Earth's shadow falling on it? (yes/no)", "answers": ["no"],
+         "wrong": {"yes": ("Thinks Earth's shadow causes Moon phases", 0.83)},
+         "recovery": {"text": "Is a lunar eclipse the same thing as a normal Moon phase? (yes/no)", "answers": ["no"], "wrong": "yes"},
+         "ladder": ["Can you see a crescent Moon when the Moon is in Earth's shadow?",
+                    "Hint: half of the Moon is always lit by the Sun. Phases depend on how much of that lit half we can see.",
+                    "Explanation: phases come from the Moon's orbit changing our viewing angle of its lit half. Earth's shadow only causes eclipses."]},
+}
+
+PYTHON_QUESTIONS = {
+  "p1": {"category": "Python", "concept": "Python functions", "text": "Which keyword starts a function definition in Python?", "answers": ["def"],
+         "wrong": {"function": ("Confuses Python syntax with other languages", 0.82)},
+         "recovery": {"text": "Which keyword starts a class definition in Python?", "answers": ["class"], "wrong": "def"},
+         "ladder": ["Look at the first word in a Python function declaration.", "Hint: the keyword is short and comes before the function name.", "Explanation: Python uses `def` to define a function."]},
+  "p2": {"category": "Python", "concept": "Python lists", "text": "What is the result of len([4, 7, 9])?", "answers": ["3"],
+         "wrong": {"2": ("Confuses the last index with the number of items", 0.8)},
+         "recovery": {"text": "How many items are in ['a', 'b']?", "answers": ["2"], "wrong": "1"},
+         "ladder": ["Count each value in the list.", "Hint: `len` counts items, not the index of the last item.", "Explanation: the list contains three items, so `len([4, 7, 9])` is 3." ]},
+  "p3": {"category": "Python", "concept": "Python list methods", "text": "Which list method adds an item to the end of a Python list?", "answers": ["append"],
+         "wrong": {"add": ("Assumes Python lists use a generic add method", 0.78)},
+         "recovery": {"text": "Which list method removes and returns the last item?", "answers": ["pop"], "wrong": "append"},
+         "ladder": ["Think of the method used like `items.<method>(value)`.", "Hint: it means to attach another item at the end.", "Explanation: `append(value)` adds a value to the end of a Python list."]},
+}
+
+JAVA_QUESTIONS = {
+  "j1": {"category": "Java", "concept": "Java entry point", "text": "What is the name of the standard Java application entry-point method?", "answers": ["main"],
+         "wrong": {"start": ("Confuses the entry point with a descriptive label", 0.8)},
+         "recovery": {"text": "What is the name of the Java method that commonly prints a line to the console?", "answers": ["println", "print"], "wrong": "main"},
+         "ladder": ["Recall the method declared inside `public static void ...`.", "Hint: it is the short name used by the Java launcher.", "Explanation: Java starts a standard application by calling its `main` method."]},
+  "j2": {"category": "Java", "concept": "Java primitive types", "text": "Which Java primitive type is commonly used to store a whole number?", "answers": ["int"],
+         "wrong": {"integer": ("Confuses the primitive type with its wrapper class", 0.82)},
+         "recovery": {"text": "Which Java primitive type stores a true-or-false value?", "answers": ["boolean"], "wrong": "int"},
+         "ladder": ["Choose the short primitive type, not a class name.", "Hint: it is also used in declarations such as `int count = 3;`.", "Explanation: `int` is Java's primitive type for whole numbers."]},
+  "j3": {"category": "Java", "concept": "Java object creation", "text": "Which Java keyword creates a new object from a class?", "answers": ["new"],
+         "wrong": {"create": ("Uses an English verb instead of Java syntax", 0.78)},
+         "recovery": {"text": "Which keyword declares a class in Java?", "answers": ["class"], "wrong": "new"},
+         "ladder": ["Look at the keyword before a constructor call.", "Hint: object creation looks like `new TypeName()`.", "Explanation: Java uses the `new` keyword to create an object."]},
+}
+
+MATH_QUESTIONS.update({
+  "q9": {"category": "Math", "concept": "Multiplying fractions", "text": "What is 2/3 × 3/5?", "answers": ["2/5"],
+         "wrong": {"6/8": ("Adds numerators and denominators instead of multiplying", 0.82)},
+         "recovery": {"text": "What is 1/2 × 2/3?", "answers": ["1/3"], "wrong": "3/5"},
+         "ladder": ["Multiply the numerators together and the denominators together.", "Hint: calculate (2 × 3)/(3 × 5), then simplify.", "Explanation: (2 × 3)/(3 × 5) = 6/15, which simplifies to 2/5."]},
+  "q10": {"category": "Math", "concept": "Perimeter", "text": "A rectangle is 7 cm long and 3 cm wide. What is its perimeter in centimeters?", "answers": ["20", "20cm", "20 cm"],
+          "wrong": {"21": ("Finds area instead of perimeter", 0.83)},
+          "recovery": {"text": "What is the perimeter of a 5 cm by 2 cm rectangle?", "answers": ["14", "14cm", "14 cm"], "wrong": "10"},
+          "ladder": ["Perimeter is the distance around all four sides.", "Hint: add the length and width, then multiply that sum by 2.", "Explanation: 2 × (7 + 3) = 20, so the perimeter is 20 cm."]},
+})
+
+DSA_QUESTIONS.update({
+  "d9": {"category": "DSA", "concept": "Breadth-first search", "text": "Which data structure does breadth-first search commonly use to visit nodes level by level?", "answers": ["queue"],
+         "wrong": {"stack": ("Confuses breadth-first search with depth-first search", 0.84)},
+         "recovery": {"text": "Which data structure is commonly used for iterative depth-first search?", "answers": ["stack"], "wrong": "queue"},
+         "ladder": ["BFS visits the oldest discovered node first.", "Hint: think of a first-in, first-out structure.", "Explanation: BFS uses a queue so discovered nodes are processed in arrival order, level by level."]},
+  "d10": {"category": "DSA", "concept": "Binary tree leaves", "text": "What is the name for a tree node with no children?", "answers": ["leaf", "leaf node"],
+          "wrong": {"root": ("Confuses the root with a terminal node", 0.8)},
+          "recovery": {"text": "What is the name of the topmost node in a tree?", "answers": ["root", "root node"], "wrong": "leaf"},
+          "ladder": ["A terminal node has no children.", "Hint: it is named after a part of a plant.", "Explanation: a node with no children is called a leaf (or leaf node)."]},
+})
+
+SCIENCE_QUESTIONS.update({
+  "s9": {"category": "Science", "concept": "Water cycle", "text": "What is the process called when liquid water changes into water vapor?", "answers": ["evaporation", "vaporization"],
+         "wrong": {"condensation": ("Reverses evaporation and condensation", 0.84)},
+         "recovery": {"text": "What is the process called when water vapor cools and forms liquid droplets?", "answers": ["condensation"], "wrong": "evaporation"},
+         "ladder": ["Think about what happens to water in a puddle on a warm day.", "Hint: liquid gains energy and becomes a gas.", "Explanation: evaporation changes liquid water into water vapor, which rises into the atmosphere."]},
+  "s10": {"category": "Science", "concept": "Food chains", "text": "In a simple food chain, what do we call an organism that makes its own food using sunlight?", "answers": ["producer"],
+          "wrong": {"consumer": ("Confuses organisms that make food with organisms that eat it", 0.82)},
+          "recovery": {"text": "In a food chain, what do we call an animal that gets energy by eating plants or other animals?", "answers": ["consumer"], "wrong": "producer"},
+          "ladder": ["Consider which organism starts the flow of energy in most ecosystems.", "Hint: plants use sunlight to make sugars rather than eating other organisms.", "Explanation: plants and similar organisms are producers because they make their own food, usually through photosynthesis."]},
+})
+
+PYTHON_QUESTIONS.update({
+  "p4": {"category": "Python", "concept": "Python modulo", "text": "What is the value of 7 % 2 in Python?", "answers": ["1"],
+         "wrong": {"3.5": ("Treats modulo as division", 0.82)},
+         "recovery": {"text": "What is the value of 10 % 4 in Python?", "answers": ["2"], "wrong": "2.5"},
+         "ladder": ["The percent operator gives a remainder, not a quotient.", "Hint: divide 7 by 2 and report what is left over.", "Explanation: 2 fits into 7 three times with a remainder of 1, so 7 % 2 is 1."]},
+  "p5": {"category": "Python", "concept": "Python range", "text": "How many values are produced by range(4) in a for loop?", "answers": ["4"],
+         "wrong": {"5": ("Includes the stop value in range", 0.8)},
+         "recovery": {"text": "How many values are produced by range(3)?", "answers": ["3"], "wrong": "4"},
+         "ladder": ["Write out the integers generated before the stop value.", "Hint: range(4) starts at 0 and does not include 4.", "Explanation: range(4) produces 0, 1, 2, and 3, which is four values."]},
+  "p6": {"category": "Python", "concept": "Python indexing", "text": "What does [10, 20, 30][0] evaluate to?", "answers": ["10"],
+         "wrong": {"20": ("Uses one-based rather than zero-based indexing", 0.82)},
+         "recovery": {"text": "What does ['red', 'blue'][1] evaluate to?", "answers": ["blue"], "wrong": "red"},
+         "ladder": ["Python list indexes start from zero.", "Hint: index 0 points to the first item.", "Explanation: the item at index 0 is the first list value, 10."]},
+  "p7": {"category": "Python", "concept": "Python boolean operators", "text": "What is the result of True and False in Python?", "answers": ["false"],
+         "wrong": {"true": ("Treats and like an inclusive-or operator", 0.82)},
+         "recovery": {"text": "What is the result of True and True?", "answers": ["true"], "wrong": "false"},
+         "ladder": ["For `and`, both values must be true for the result to be true.", "Hint: one side of this expression is false.", "Explanation: `True and False` is False because both operands must be true."]},
+  "p8": {"category": "Python", "concept": "Python dictionaries", "text": "In data = {'name': 'Mia'}, which expression accesses the value 'Mia'?", "answers": ["data['name']", "data[\"name\"]"],
+         "wrong": {"data.name": ("Uses attribute access instead of dictionary key access", 0.84)},
+         "recovery": {"text": "In scores = {'math': 9}, which expression accesses 9?", "answers": ["scores['math']", "scores[\"math\"]"], "wrong": "scores.math"},
+         "ladder": ["A dictionary stores values under keys.", "Hint: put the key in square brackets after the dictionary name.", "Explanation: use `data['name']` to look up the value associated with the `name` key."]},
+  "p9": {"category": "Python", "concept": "Python string conversion", "text": "Which Python function converts the integer 42 to the string '42'?", "answers": ["str", "str(42)"],
+         "wrong": {"int": ("Chooses a conversion in the opposite direction", 0.8)},
+         "recovery": {"text": "Which Python function converts the string '8' to the integer 8?", "answers": ["int", "int('8')", "int(\"8\")"], "wrong": "str"},
+         "ladder": ["Choose the built-in conversion named for the desired result type.", "Hint: the result needs to be text, not a number.", "Explanation: `str(42)` converts the integer 42 to the string `'42'`."]},
+  "p10": {"category": "Python", "concept": "Python exceptions", "text": "Which keyword starts an exception handler after a try block in Python?", "answers": ["except"],
+          "wrong": {"catch": ("Uses exception syntax from another language", 0.84)},
+          "recovery": {"text": "Which keyword begins a block that runs whether or not an exception occurs?", "answers": ["finally"], "wrong": "except"},
+          "ladder": ["Python uses a different handler keyword than Java.", "Hint: the block begins with `try` and then this keyword names the error to handle.", "Explanation: Python uses `except` to handle matching exceptions raised in a `try` block."]},
+})
+
+JAVA_QUESTIONS.update({
+  "j4": {"category": "Java", "concept": "Java array indexing", "text": "What is the first valid index of a Java array?", "answers": ["0", "zero"],
+         "wrong": {"1": ("Uses one-based rather than zero-based indexing", 0.82)},
+         "recovery": {"text": "In an array with 5 elements, what is the index of the last element?", "answers": ["4"], "wrong": "5"},
+         "ladder": ["Like many programming languages, Java starts array positions at zero.", "Hint: what index does Java use for the first array item?", "Explanation: Java arrays are zero-indexed, so the first valid index is 0."]},
+  "j5": {"category": "Java", "concept": "Java string comparison", "text": "Which method compares the contents of two Java String objects?", "answers": ["equals", "equals()"],
+         "wrong": {"==": ("Confuses reference equality with string content equality", 0.85)},
+         "recovery": {"text": "Which method returns the number of characters in a Java String named word?", "answers": ["length", "length()"], "wrong": "size"},
+         "ladder": ["There is a difference between checking object references and checking text contents.", "Hint: call the comparison method on one string and pass the other string.", "Explanation: `first.equals(second)` compares String contents; `==` checks whether references point to the same object."]},
+  "j6": {"category": "Java", "concept": "Java loop control", "text": "Which Java keyword immediately exits the nearest loop?", "answers": ["break"],
+         "wrong": {"continue": ("Confuses exiting a loop with skipping one iteration", 0.82)},
+         "recovery": {"text": "Which keyword skips the rest of the current loop iteration and continues with the next one?", "answers": ["continue"], "wrong": "break"},
+         "ladder": ["One keyword exits the loop; another skips only the current iteration.", "Hint: choose the one that stops the loop entirely.", "Explanation: `break` exits the nearest loop immediately; `continue` only advances to the next iteration."]},
+  "j7": {"category": "Java", "concept": "Java inheritance", "text": "Which keyword declares that a Java class inherits from another class?", "answers": ["extends"],
+         "wrong": {"implements": ("Confuses class inheritance with interface implementation", 0.82)},
+         "recovery": {"text": "Which keyword declares that a Java class implements an interface?", "answers": ["implements"], "wrong": "extends"},
+         "ladder": ["Java uses separate keywords for inheriting a class and implementing an interface.", "Hint: a subclass declaration uses `class Child ... Parent`.", "Explanation: Java uses `extends` for class inheritance; `implements` is for interfaces."]},
+  "j8": {"category": "Java", "concept": "Java integer division", "text": "What is the value of 7 / 2 when both operands are int in Java?", "answers": ["3"],
+         "wrong": {"3.5": ("Assumes integer division keeps a fractional part", 0.84)},
+         "recovery": {"text": "What is the value of 9 / 4 when both operands are int in Java?", "answers": ["2"], "wrong": "2.25"},
+         "ladder": ["The declared operand types affect the result of division.", "Hint: integer division discards the fractional remainder.", "Explanation: with two `int` operands, Java truncates the result, so 7 / 2 evaluates to 3."]},
+  "j9": {"category": "Java", "concept": "Java constants", "text": "Which Java keyword marks a variable so it can be assigned only once?", "answers": ["final"],
+         "wrong": {"static": ("Confuses class-level storage with an unchangeable value", 0.82)},
+         "recovery": {"text": "Which Java keyword makes a member belong to the class rather than each instance?", "answers": ["static"], "wrong": "final"},
+         "ladder": ["Think of the modifier used for a constant-like variable.", "Hint: it prevents reassignment after initialization.", "Explanation: `final` prevents a variable from being assigned again after its initial assignment."]},
+  "j10": {"category": "Java", "concept": "Java access modifiers", "text": "Which Java access modifier allows access from any class?", "answers": ["public"],
+          "wrong": {"private": ("Confuses broad access with access limited to the declaring class", 0.85)},
+          "recovery": {"text": "Which Java access modifier limits access to the declaring class?", "answers": ["private"], "wrong": "public"},
+          "ladder": ["Compare the most restrictive modifier with the broadest one.", "Hint: this modifier is often used on the `main` method.", "Explanation: `public` allows the member to be accessed from any class, subject to other rules."]},
+})
+
+SUBJECTS = {
+    "Math": MATH_QUESTIONS,
+    "DSA": DSA_QUESTIONS,
+    "Science": SCIENCE_QUESTIONS,
+    "Python": PYTHON_QUESTIONS,
+    "Java": JAVA_QUESTIONS,
+}
+QUESTIONS = {qid: q for bank in SUBJECTS.values() for qid, q in bank.items()}
+QUESTION_BANKS = {name: list(bank.values()) for name, bank in SUBJECTS.items()}
 CONCEPTS = [q["concept"] for q in QUESTIONS.values()]
-INITIAL_MASTERY = dict(zip(CONCEPTS, [0.35, 0.4, 0.5, 0.45, 0.55, 0.5, 0.6, 0.52, 0.48, 0.58, 0.46, 0.54, 0.62, 0.5, 0.57, 0.49]))
+
+INITIAL_MASTERY = {concept: 0.0 for concept in CONCEPTS}
+
+# 1 = easy, 2 = medium, 3 = hard. Used by GET /api/questions/next.
+DIFFICULTY = {
+    "q1": 2, "q2": 1, "q3": 1, "q4": 2, "q5": 1, "q6": 1, "q7": 3, "q8": 1,
+    "d1": 2, "d2": 1, "d3": 2, "d4": 2, "d5": 1, "d6": 2, "d7": 3, "d8": 1,
+    "s1": 2, "s2": 2, "s3": 2, "s4": 3, "s5": 3, "s6": 3, "s7": 2, "s8": 1,
+       "p1": 1, "p2": 1, "p3": 2, "p4": 1, "p5": 1, "p6": 1, "p7": 2, "p8": 2, "p9": 1, "p10": 2,
+       "j1": 1, "j2": 1, "j3": 2, "j4": 1, "j5": 2, "j6": 2, "j7": 2, "j8": 2, "j9": 2, "j10": 1,
+       "q9": 2, "q10": 1, "d9": 2, "d10": 1, "s9": 2, "s10": 1,
+}
+
+
+def _n(s: str) -> str:
+    """Same normalisation main.norm() applies to student answers."""
+    return "".join(s.split()).lower()
+
+
+# Pre-normalised copies so matching is reliable (e.g. 'O(log n)' vs 'o(logn)').
+# The original human-readable fields are left untouched for the LLM layer.
+for _qid, _q in QUESTIONS.items():
+    _q["difficulty"] = DIFFICULTY.get(_qid, 2)
+    _q["answers_norm"] = {_n(a) for a in _q["answers"]}
+    _q["wrong_norm"] = {_n(k): v for k, v in _q["wrong"].items()}
+    _q["recovery_norm"] = {_n(a) for a in _q["recovery"]["answers"]}
